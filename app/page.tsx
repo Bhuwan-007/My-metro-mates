@@ -1,65 +1,94 @@
-import Image from "next/image";
+import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    // OUTER CONTAINER: The Moving Tunnel (Dark Blue -> Slate -> Black)
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 animate-gradient-x text-white">
+      
+      {/* 1. The Grid Overlay (The "Tracks" feel) */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-30"></div>
+      
+      {/* 2. The Vignette (Darkens corners for focus) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)]"></div>
+
+      {/* 3. The Glass Card (The "Station Window") */}
+      <div className="relative z-10 mx-4 w-full max-w-lg rounded-3xl border border-white/10 bg-slate-950/30 p-10 text-center shadow-2xl backdrop-blur-xl">
+        
+        {/* Floating Icon */}
+        <div className="mb-8 flex justify-center">
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-600/20 border border-blue-500/30 shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+             {/* Metro Icon */}
+             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+               <path d="M19 17h2l.64-2.54c.24-.959.24-1.962 0-2.92l-1.07-4.27A5 5 0 0 0 15.71 4H8.29a5 5 0 0 0-4.86 3.27l-1.07 4.27c-.24.959-.24 1.962 0 2.92L3 17h2" />
+               <path d="m9 17-1-4" /><path d="m15 17 1-4" />
+               <circle cx="9" cy="21" r="1" /><circle cx="15" cy="21" r="1" />
+               <path d="M7 9h10" />
+             </svg>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+        {/* Headlines */}
+        <h1 className="mb-3 text-5xl font-extrabold tracking-tight text-white drop-shadow-lg">
+          My Metro <span className="text-blue-500">Mates</span>
+        </h1>
+        <p className="mb-10 text-lg text-slate-300">
+          Your daily commute, <span className="text-blue-200 font-medium">reimagined.</span>
+          <br />
+          Find partners. Travel safe.
+        </p>
+
+        {/* SCENARIO 1: NOT Logged In */}
+        <SignedOut>
+          <div className="flex flex-col gap-4">
+             <SignInButton mode="modal">
+                <button className="group relative w-full overflow-hidden rounded-xl bg-white py-4 font-bold text-slate-900 transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:cursor-pointer">
+                  <div className="relative z-10 flex items-center justify-center gap-2">
+                    <span>Login with College Email</span>
+                    <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </div>
+                </button>
+             </SignInButton>
+             
+             <p className="text-xs text-slate-500 uppercase tracking-widest">
+               Exclusive to IP University
+             </p>
+          </div>
+        </SignedOut>
+
+        {/* SCENARIO 2: ALREADY Logged In */}
+        <SignedIn>
+          <div className="flex flex-col items-center gap-4 rounded-xl bg-white/5 p-6 border border-white/5">
+            <div className="flex items-center gap-3 mb-2">
+               <div className="scale-110 ring-2 ring-blue-500/50 rounded-full">
+                  <UserButton afterSignOutUrl="/"/>
+               </div>
+               <div className="text-left">
+                  <p className="text-sm text-slate-400">Currently logged in</p>
+                  <p className="text-sm font-bold text-white">Ready to travel?</p>
+               </div>
+            </div>
+            
+            <Link href="/dashboard" className="w-full">
+              <button className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-500 transition-colors shadow-lg shadow-blue-500/20">
+                Enter Dashboard
+              </button>
+            </Link>
+          </div>
+        </SignedIn>
+
+      </div>
+      
+      {/* Footer Station Sign */}
+      <div className="absolute bottom-8 flex items-center gap-4 text-xs font-medium text-slate-600 uppercase tracking-[0.2em]">
+        <span className="animate-pulse text-green-500">●</span>
+        <span>System Online</span>
+        <span>•</span>
+        <span>V 1.0</span>
+      </div>
+
     </div>
   );
 }
