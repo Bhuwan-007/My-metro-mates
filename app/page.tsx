@@ -1,7 +1,14 @@
 import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { createUser } from "@/actions/user.actions"; // <--- 1. Import the Sync Action
 
-export default function Home() {
+export default async function Home() { // <--- 2. Make component Async
+  
+  // <--- 3. Trigger the Sync
+  // This runs on the server every time the page loads.
+  // If the user is logged in, it saves them to MongoDB.
+  await createUser(); 
+
   return (
     // OUTER CONTAINER: The Moving Tunnel (Dark Blue -> Slate -> Black)
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 animate-gradient-x text-white">
