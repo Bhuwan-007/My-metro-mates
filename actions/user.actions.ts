@@ -45,3 +45,25 @@ export async function createUser() {
     return null; 
   }
 }
+// ... keep existing imports ...
+
+// Add this function at the bottom
+export async function updateIdCard(imageUrl: string) {
+  try {
+    await connectDB();
+    
+    const clerkUser = await currentUser();
+    if (!clerkUser) return { success: false };
+
+    // Find the user by Clerk ID and update their card URL
+    await UserModel.findOneAndUpdate(
+      { clerkId: clerkUser.id },
+      { idCardUrl: imageUrl }
+    );
+
+    return { success: true };
+  } catch (error) {
+    console.log("Error updating ID Card:", error);
+    return { success: false };
+  }
+}

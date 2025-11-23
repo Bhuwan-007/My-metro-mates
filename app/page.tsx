@@ -46,10 +46,13 @@ export default async function Home() { // <--- 2. Make component Async
         </p>
 
         {/* SCENARIO 1: NOT Logged In */}
+        {/* SCENARIO 1: NOT Logged In */}
         <SignedOut>
-          <div className="flex flex-col gap-4">
+          <div className="mx-auto flex flex-col gap-4 w-full max-w-xs">
+             
+             {/* OPTION A: The Happy Path (College Email) */}
              <SignInButton mode="modal">
-                <button className="group relative w-full overflow-hidden rounded-xl bg-white py-4 font-bold text-slate-900 transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:cursor-pointer">
+                <button className="group relative w-full overflow-hidden rounded-xl bg-white py-3.5 font-bold text-slate-900 transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:cursor-pointer">
                   <div className="relative z-10 flex items-center justify-center gap-2">
                     <span>Login with College Email</span>
                     <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,9 +62,20 @@ export default async function Home() { // <--- 2. Make component Async
                 </button>
              </SignInButton>
              
-             <p className="text-xs text-slate-500 uppercase tracking-widest">
-               Exclusive to IP University
-             </p>
+             <div className="flex items-center gap-2 px-2">
+                <div className="h-px flex-1 bg-white/10"></div>
+                <span className="text-xs text-slate-500 uppercase">OR</span>
+                <div className="h-px flex-1 bg-white/10"></div>
+             </div>
+
+             {/* OPTION B: The Manual Verification Path */}
+             {/* Note: We point to /verify-id. Clerk will force login, then send them there. */}
+             <SignInButton mode="modal" forceRedirectUrl="/verify-id">
+                <button className="w-full rounded-xl border border-white/10 bg-white/5 py-3 font-semibold text-slate-300 transition-all hover:bg-white/10 hover:text-white hover:cursor-pointer text-sm">
+                  Don't have one? <span className="text-blue-400">Verify with College ID</span>
+                </button>
+             </SignInButton>
+
           </div>
         </SignedOut>
 
