@@ -46,7 +46,6 @@ export default async function Home() { // <--- 2. Make component Async
         </p>
 
         {/* SCENARIO 1: NOT Logged In */}
-        {/* SCENARIO 1: NOT Logged In */}
         <SignedOut>
           <div className="mx-auto flex flex-col gap-4 w-full max-w-xs">
              

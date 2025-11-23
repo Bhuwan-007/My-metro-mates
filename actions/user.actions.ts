@@ -55,10 +55,12 @@ export async function updateIdCard(imageUrl: string) {
     const clerkUser = await currentUser();
     if (!clerkUser) return { success: false };
 
-    // Find the user by Clerk ID and update their card URL
     await UserModel.findOneAndUpdate(
       { clerkId: clerkUser.id },
-      { idCardUrl: imageUrl }
+      { 
+        idCardUrl: imageUrl,
+        rejectionReason: "" // <--- CLEAR THE REASON ON NEW UPLOAD
+      }
     );
 
     return { success: true };

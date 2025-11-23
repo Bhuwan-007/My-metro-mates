@@ -20,6 +20,7 @@ export interface IUser extends Document {
   // Verification
   isVerified: boolean;
   idCardUrl?: string;
+  rejectionReason?: string;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -40,6 +41,7 @@ const UserSchema = new Schema<IUser>(
 
     isVerified: { type: Boolean, default: false },
     idCardUrl: { type: String },
+    rejectionReason: { type: String, default: "" },
   },
   { timestamps: true }
 );
