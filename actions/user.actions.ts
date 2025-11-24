@@ -114,3 +114,34 @@ export async function updateUser(params: UpdateUserParams) {
     return { success: false };
   }
 }
+
+// ... existing imports ...
+
+export async function getMatches(currentUserId: string) {
+  try {
+    await connectDB();
+
+    // 1. Get the current user's details first
+    const currentUser = await UserModel.findOne({ clerkId: currentUserId });
+    if (!currentUser) return [];
+
+    // 2. THE ALGORITHM 🤖
+    // Find users who:
+    // - Are NOT me ($ne = Not Equal)
+    // - Go to the SAME College Station
+    // - Are Onboarded (Have a profile)
+    // - Are Verified
+    const matches = await UserModel.find({
+      clerkId: { $ne: currentUserId },
+      collegeStation: currentUser.collegeStation,
+      onboarded: true,
+      isVerified: true,
+    }).select("_id clerkId firstName lastName homeStation startTime imageUrl bio contactMethod friends");
+    // ^ We only select safe fields (don't send their email or ID card URL!)
+
+    return JSON.parse(JSON.stringify(matches));
+  } catch (error) {
+    console.log("Error fetching matches:", error);
+    return [];
+  }
+}
