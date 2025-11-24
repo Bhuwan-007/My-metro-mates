@@ -26,6 +26,9 @@ export interface IUser extends Document {
 
   friends: string[];        // Array of Clerk IDs
   friendRequests: string[];
+
+  todaysTime?: string; 
+  lastStatusUpdate?: Date;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -52,6 +55,9 @@ const UserSchema = new Schema<IUser>(
 
     friends: { type: [String], default: [] },
     friendRequests: { type: [String], default: [] },
+
+    todaysTime: { type: String },
+    lastStatusUpdate: { type: Date },
   },
   { timestamps: true }
 );

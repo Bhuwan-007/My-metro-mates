@@ -32,7 +32,7 @@ export default async function SearchPage() {
         <Link href="/mates" className="group flex items-center gap-3 px-5 py-3 bg-zinc-900 border border-zinc-800 rounded-full hover:border-blue-500/50 transition-all">
             <span className="text-sm font-bold text-zinc-300 group-hover:text-white">My Network</span>
             
-            {/* LOGIC: If requests > 0, show Red Badge. Else show Green Pulse. */}
+            {/* Notification Badge Logic */}
             {requestCount > 0 ? (
                 <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse">
                     {requestCount} NEW
@@ -53,9 +53,24 @@ export default async function SearchPage() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {matches.map((match: any) => (
+            {matches.map((match: any) => {
                 
-                // --- THE CARD (Taller to fit bio) ---
+                // --- 🕒 LOGIC: Check for "Live Time" ---
+                let displayTime = match.startTime;
+                let isLive = false;
+
+                if (match.todaysTime && match.lastStatusUpdate) {
+                    const statusDate = new Date(match.lastStatusUpdate);
+                    const today = new Date();
+                    
+                    if (statusDate.getDate() === today.getDate() && statusDate.getMonth() === today.getMonth()) {
+                        displayTime = match.todaysTime;
+                        isLive = true;
+                    }
+                }
+                // ---------------------------------------
+
+                return (
                 <div key={match.clerkId} className="group relative h-[240px] bg-[#050505] border border-zinc-800 hover:border-blue-500/50 rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
                     
                     {/* 1. THE SILHOUETTE (Right Side) */}
@@ -67,22 +82,8 @@ export default async function SearchPage() {
                                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
                                 </filter>
                             </defs>
-                            
-                            <path 
-                                d="M100 180 C 100 180, 140 180, 160 140 C 170 120, 160 90, 130 90 C 130 90, 140 60, 130 40 C 120 20, 90 20, 80 40 C 70 60, 80 90, 80 90 C 50 90, 40 120, 50 140 C 70 180, 100 180, 100 180 Z"
-                                stroke="currentColor" 
-                                strokeWidth="2"
-                                className="text-zinc-700 group-hover:text-blue-400 transition-colors duration-500"
-                                filter="url(#glow)" 
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                            <rect x="110" y="100" width="20" height="35" rx="2" 
-                                stroke="currentColor" 
-                                strokeWidth="2"
-                                transform="rotate(-15 120 117)"
-                                className="text-zinc-700 group-hover:text-blue-400 transition-colors duration-500"
-                            />
+                            <path d="M100 180 C 100 180, 140 180, 160 140 C 170 120, 160 90, 130 90 C 130 90, 140 60, 130 40 C 120 20, 90 20, 80 40 C 70 60, 80 90, 80 90 C 50 90, 40 120, 50 140 C 70 180, 100 180, 100 180 Z" stroke="currentColor" strokeWidth="2" className="text-zinc-700 group-hover:text-blue-400 transition-colors duration-500" filter="url(#glow)" strokeLinecap="round" strokeLinejoin="round"/>
+                            <rect x="110" y="100" width="20" height="35" rx="2" stroke="currentColor" strokeWidth="2" transform="rotate(-15 120 117)" className="text-zinc-700 group-hover:text-blue-400 transition-colors duration-500"/>
                         </svg>
                     </div>
 
@@ -97,10 +98,7 @@ export default async function SearchPage() {
                                     <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors flex items-center gap-2">
                                         {match.firstName} {match.lastName}
                                     </h3>
-                                    {/* RESTORED: Student Tag */}
-                                    <span className="text-[9px] bg-blue-900/40 text-blue-300 border border-blue-800 px-1.5 py-0.5 rounded tracking-wider font-bold uppercase">
-                                        Student
-                                    </span>
+                                    <span className="text-[9px] bg-blue-900/40 text-blue-300 border border-blue-800 px-1.5 py-0.5 rounded tracking-wider font-bold uppercase">Student</span>
                                 </div>
                             </div>
                             
@@ -109,11 +107,8 @@ export default async function SearchPage() {
                                 <p className="text-sm text-zinc-300 font-medium truncate max-w-[180px]">{match.homeStation}</p>
                             </div>
 
-                            {/* RESTORED: Bio Quote */}
                             {match.bio && (
-                                <p className="text-xs text-zinc-500 italic line-clamp-2 max-w-[200px]">
-                                    "{match.bio}"
-                                </p>
+                                <p className="text-xs text-zinc-500 italic line-clamp-2 max-w-[200px]">"{match.bio}"</p>
                             )}
                         </div>
 
@@ -122,20 +117,20 @@ export default async function SearchPage() {
                             
                             {/* Left: Stats */}
                             <div className="flex flex-col gap-1">
-                                <div className="flex items-center gap-1 text-xs text-zinc-400 font-mono">
-                                    <span>🕒</span> <span className="text-blue-400 font-bold">{match.startTime}</span>
+                                <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono">
+                                    <span className={isLive ? "text-blue-400 font-bold" : "text-zinc-400"}>
+                                        {isLive ? "🔴" : "🕒"} {displayTime}
+                                    </span>
+                                    {isLive && <span className="text-[8px] bg-blue-900/50 text-blue-200 px-1 rounded border border-blue-800 animate-pulse">NOW</span>}
                                 </div>
-                                {/* RESTORED: Friend Count */}
                                 <div className="flex items-center gap-1 text-xs text-zinc-500 font-mono">
                                     <span>🔗</span> <span>{match.friends?.length || 0} companions</span>
                                 </div>
                             </div>
                             
-                            {/* Connect Button */}
-                            {/* --- NEW SMART LOGIC (3 States) --- */}
+                            {/* RIGHT SIDE: SMART BUTTON LOGIC 👇 */}
                             {(() => {
                                 if (match.isFriend) {
-                                    // STATE 1: ALREADY FRIENDS
                                     return (
                                         <button disabled className="bg-green-900/20 border border-green-900 text-green-400 px-6 py-2 rounded-lg text-[10px] font-extrabold tracking-wide cursor-default flex items-center gap-2 uppercase shadow-[0_0_10px_rgba(74,222,128,0.1)]">
                                             <span>🤝</span> Companion
@@ -143,7 +138,6 @@ export default async function SearchPage() {
                                     );
                                 } 
                                 else if (match.hasIncomingRequest) {
-                                    // STATE 2: THEY REQUESTED ME (Go to Inbox)
                                     return (
                                         <Link href="/mates">
                                             <button className="bg-yellow-900/20 border border-yellow-700 text-yellow-500 px-6 py-2 rounded-lg text-[10px] font-extrabold tracking-wide flex items-center gap-2 uppercase hover:bg-yellow-900/40 transition-colors shadow-[0_0_10px_rgba(234,179,8,0.1)]">
@@ -153,7 +147,6 @@ export default async function SearchPage() {
                                     );
                                 } 
                                 else {
-                                    // STATE 3: STRANGER (Connect or Request Sent)
                                     return (
                                         <ConnectButton 
                                             receiverId={match.clerkId} 
@@ -170,7 +163,7 @@ export default async function SearchPage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent pointer-events-none"></div>
 
                 </div>
-            ))}
+            )})}
         </div>
 
       </div>
@@ -181,8 +174,13 @@ export default async function SearchPage() {
             <Link href="/dashboard" className="p-3 rounded-full hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </Link>
-            <Link href="/search" className="p-3 rounded-full bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]">
+            <Link href="/mates" className="relative p-3 rounded-full bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                
+                {/* Dock Notification Dot */}
+                {requestCount > 0 && (
+                    <span className="absolute top-2 right-2 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-blue-600"></span>
+                )}
             </Link>
         </div>
       </div>

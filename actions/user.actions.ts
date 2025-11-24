@@ -143,7 +143,7 @@ export async function getMatches(currentUserId: string) {
       collegeStation: currentUser.collegeStation,
       onboarded: true,
       isVerified: true,
-    }).select("_id clerkId firstName lastName homeStation startTime imageUrl bio contactMethod friends"); 
+    }).select("_id clerkId firstName lastName homeStation startTime imageUrl bio contactMethod friends todaysTime lastStatusUpdate"); 
 
     // 5. Add ALL Status Flags
     const matchesWithStatus = matches.map((match) => ({
@@ -183,7 +183,7 @@ export async function getMyMates(currentUserId: string) {
     // 2. Fetch details for Accepted Friends
     const friends = await UserModel.find({
       clerkId: { $in: currentUser.friends }
-    }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue bio");
+    }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue bio todaysTime lastStatusUpdate");
 
     return {
       requests: JSON.parse(JSON.stringify(requests)),

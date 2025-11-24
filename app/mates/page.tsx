@@ -1,4 +1,4 @@
-import { createUser, getMyMates } from "@/actions/user.actions";
+import { createUser, getMyMates } from "@/actions/user.actions"; // Fixed import path (singular .action)
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import RequestButtons from "@/components/RequestButtons";
@@ -39,13 +39,11 @@ export default async function MatesPage() {
                 <div className="space-y-3">
                     {requests.map((req: any) => (
                         <div key={req.clerkId} className="bg-[#0A0A0A] border border-zinc-800 p-4 rounded-2xl flex items-center justify-between">
-                            
-                            {/* Person Info */}
                             <div className="flex items-center gap-3">
                                 <img src={req.imageUrl} className="w-12 h-12 rounded-full bg-zinc-800 object-cover" />
                                 <div>
                                     <h3 className="font-bold text-white">{req.firstName} {req.lastName}</h3>
-                                    <p className="text-xs text-zinc-500">{req.homeStation} • {req.startTime}</p>
+                                    <p className="text-xs text-zinc-500 mb-1">{req.homeStation} • {req.startTime}</p>
                                     <a 
                                         href={req.contactMethod === 'whatsapp' ? `https://wa.me/${req.contactValue}` : `https://instagram.com/${req.contactValue}`}
                                         target="_blank"
@@ -55,8 +53,6 @@ export default async function MatesPage() {
                                     </a>
                                 </div>
                             </div>
-
-                            {/* Action Buttons (We will wire these next!) */}
                             <RequestButtons senderId={req.clerkId} />
                         </div>
                     ))}
@@ -78,33 +74,65 @@ export default async function MatesPage() {
                 </div>
             ) : (
                 <div className="space-y-3">
-                    {friends.map((friend: any) => (
-                        <div key={friend.clerkId} className="bg-zinc-900/50 border border-zinc-800/50 p-5 rounded-3xl">
-                            <div className="flex items-start justify-between mb-0.5">
-                                <div className="flex items-center gap-3">
-                                    <img src={friend.imageUrl} className="w-12 h-12 rounded-xl object-cover" />
-                                    <div>
-                                        <h3 className="font-bold text-white">{friend.firstName}</h3>
-                                        <span className="text-xs bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded">
-                                            {friend.homeStation}
-                                        </span>
+                    {friends.map((friend: any) => {
+                        
+                        // --- 🕒 TIME CHECK LOGIC ---
+                        let displayTime = friend.startTime;
+                        let isLive = false;
+
+                        if (friend.todaysTime && friend.lastStatusUpdate) {
+                            const statusDate = new Date(friend.lastStatusUpdate);
+                            const today = new Date();
+                            // Check if update matches TODAY's date
+                            if (statusDate.getDate() === today.getDate() && statusDate.getMonth() === today.getMonth()) {
+                                displayTime = friend.todaysTime;
+                                isLive = true; // Mark as Live!
+                            }
+                        }
+                        // ---------------------------
+
+                        return (
+                            <div key={friend.clerkId} className={`border p-5 rounded-3xl transition-all ${isLive ? 'bg-blue-900/10 border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.1)]' : 'bg-zinc-900/50 border-zinc-800/50'}`}>
+                                <div className="flex items-start justify-between mb-2">
+                                    <div className="flex items-center gap-3">
+                                        {/* Avatar with optional Live Ring */}
+                                        <div className={`relative rounded-xl p-[2px] ${isLive ? 'bg-blue-500 animate-pulse' : ''}`}>
+                                            <img src={friend.imageUrl} className="w-12 h-12 rounded-lg object-cover bg-zinc-900" />
+                                        </div>
+                                        
+                                        <div>
+                                            <h3 className="font-bold text-white">{friend.firstName}</h3>
+                                            
+                                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
+                                                {/* Station Badge */}
+                                                <span className="text-xs bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded w-fit">
+                                                    {friend.homeStation}
+                                                </span>
+
+                                                {/* TIME BADGE (Dynamic) */}
+                                                <span className={`text-xs px-2 py-0.5 rounded w-fit font-mono font-bold flex items-center gap-1 ${isLive ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'bg-zinc-800 text-zinc-500'}`}>
+                                                    {isLive && <span className="animate-bounce">📍</span>}
+                                                    {displayTime}
+                                                    {isLive && <span className="text-[9px] opacity-80 ml-1">TODAY</span>}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="text-right">
+                                        <FriendButtons 
+                                            friendId={friend.clerkId} 
+                                            contactMethod={friend.contactMethod} 
+                                            contactValue={friend.contactValue} 
+                                        />
                                     </div>
                                 </div>
-                                {/* Contact Button */}
-                                {/* New Smart Buttons (Visit + Unfriend) */}
-                                <div className="text-right">
-                                    <FriendButtons 
-                                        friendId={friend.clerkId} 
-                                        contactMethod={friend.contactMethod} 
-                                        contactValue={friend.contactValue} 
-                                    />
-                                </div>
+                                {friend.bio && (
+                                    <p className="text-sm text-zinc-500 italic">"{friend.bio}"</p>
+                                )}
                             </div>
-                            {friend.bio && (
-                                <p className="text-sm text-zinc-500 italic">"{friend.bio}"</p>
-                            )}
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>

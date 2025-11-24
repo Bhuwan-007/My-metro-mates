@@ -2,6 +2,7 @@ import { createUser } from "@/actions/user.actions";
 import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import StatusWidget from "@/components/StatusWidget";
 
 export default async function DashboardPage() {
   // 1. Get User Data
@@ -10,6 +11,18 @@ export default async function DashboardPage() {
   // 2. Security Checks
   if (!user) redirect("/");
   if (!user.onboarded) redirect("/onboarding");
+  // LOGIC: Check if "todaysTime" is fresh (set within the last 24 hours)
+  let activeTime = ""; // This will hold the temporary time if valid
+
+  if (user.todaysTime && user.lastStatusUpdate) {
+        const statusDate = new Date(user.lastStatusUpdate);
+        const today = new Date();
+
+        // Check if it's the same day (Simple check)
+    if (statusDate.getDate() === today.getDate() && statusDate.getMonth() === today.getMonth()) {
+            activeTime = user.todaysTime;
+        }
+    }
 
   return (
     <div className="min-h-screen bg-black text-white p-4 pb-20">
@@ -37,7 +50,13 @@ export default async function DashboardPage() {
             <div className="flex items-start justify-between mb-6">
                 <div>
                     <h2 className="text-gray-400 text-sm uppercase tracking-wider font-semibold">My Route</h2>
-                    <div className="text-3xl font-bold mt-1 text-white">{user.startTime}</div>
+                    {/* REPLACED STATIC TIME WITH WIDGET 👇 */}
+                    <div className="mt-1">
+                        <StatusWidget 
+                            currentStatus={activeTime} 
+                            defaultTime={user.startTime} 
+                        />
+                    </div>
                 </div>
                 {/* Edit Button */}
                 <Link href="/onboarding">
