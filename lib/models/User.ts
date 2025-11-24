@@ -14,13 +14,15 @@ export interface IUser extends Document {
   startTime: string;      // e.g., "08:30"
   
   // Social
-  instagramId?: string;   // Optional: For them to connect off-platform
+  contactMethod: "whatsapp" | "instagram"; 
+  contactValue: string;   // Optional: For them to connect off-platform
   bio?: string;
 
   // Verification
   isVerified: boolean;
   idCardUrl?: string;
   rejectionReason?: string;
+  onboarded: boolean;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -36,12 +38,14 @@ const UserSchema = new Schema<IUser>(
     metroLine: { type: String, default: "" },
     startTime: { type: String, default: "" },
 
-    instagramId: { type: String },
+    contactMethod: { type: String, enum: ["whatsapp", "instagram"], default: "instagram" },
+    contactValue: { type: String, default: "" },
     bio: { type: String },
 
     isVerified: { type: Boolean, default: false },
     idCardUrl: { type: String },
     rejectionReason: { type: String, default: "" },
+    onboarded: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

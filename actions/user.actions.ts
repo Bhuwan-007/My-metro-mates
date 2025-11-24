@@ -3,6 +3,7 @@
 import UserModel from "@/lib/models/User";
 import { connectDB } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export async function createUser() {
   try {
@@ -66,6 +67,50 @@ export async function updateIdCard(imageUrl: string) {
     return { success: true };
   } catch (error) {
     console.log("Error updating ID Card:", error);
+    return { success: false };
+  }
+}
+interface UpdateUserParams {
+  clerkId: string;
+  homeStation: string;
+  collegeStation: string;
+  startTime: string;
+  bio: string;
+  contactMethod: "whatsapp" | "instagram";
+  contactValue: string;
+}
+
+// 2. The Update Function
+export async function updateUser(params: UpdateUserParams) {
+  try {
+    console.log("1. updateUser Action Started..."); // Debug 1
+
+    await connectDB();
+    console.log("2. DB Connected inside Action"); // Debug 2
+
+    console.log("3. Attempting to find and update user:", params.clerkId);
+    
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { clerkId: params.clerkId },
+      {
+        homeStation: params.homeStation,
+        collegeStation: params.collegeStation,
+        startTime: params.startTime,
+        bio: params.bio,
+        contactMethod: params.contactMethod,
+        contactValue: params.contactValue,
+        onboarded: true,
+      },
+      { new: true }
+    );
+
+    console.log("4. Update Command Finished. Result:", updatedUser ? "Found & Updated" : "User Not Found"); // Debug 4
+    // This tells Next.js: "The dashboard data is stale. Refresh it next time."
+    revalidatePath("/dashboard");
+
+    return { success: true };
+  } catch (error) {
+    console.log("❌ Error updating user:", error);
     return { success: false };
   }
 }
