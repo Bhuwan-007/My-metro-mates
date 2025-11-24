@@ -178,7 +178,7 @@ export async function getMyMates(currentUserId: string) {
     // $in is a MongoDB magic operator: "Find all users whose clerkId is INSIDE this array"
     const requests = await UserModel.find({
       clerkId: { $in: currentUser.friendRequests }
-    }).select("clerkId firstName lastName imageUrl homeStation startTime");
+    }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue");
 
     // 2. Fetch details for Accepted Friends
     const friends = await UserModel.find({

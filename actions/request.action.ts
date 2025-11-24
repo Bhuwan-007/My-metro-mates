@@ -115,3 +115,56 @@ export async function rejectFriendRequest(senderClerkId: string) {
     return { success: false, message: "Failed to reject" };
   }
 }
+
+// 4. REMOVE FRIEND (Unfriend)
+export async function removeFriend(friendClerkId: string) {
+  try {
+    await connectDB();
+    const user = await currentUser();
+    if (!user) throw new Error("Unauthorized");
+
+    // Remove friend from YOUR list
+    await UserModel.findOneAndUpdate(
+      { clerkId: user.id },
+      { $pull: { friends: friendClerkId } }
+    );
+
+    // Remove YOU from THEIR list
+    await UserModel.findOneAndUpdate(
+      { clerkId: friendClerkId },
+      { $pull: { friends: user.id } }
+    );
+
+    return { success: true, message: "Connection Removed" };
+  } catch (error) {
+    console.log("Error removing friend:", error);
+    return { success: false, message: "Failed to remove" };
+  }
+}
+
+// 5. CANCEL SENT REQUEST (Undo)
+export async function cancelSentRequest(receiverClerkId: string) {
+  try {
+    await connectDB();
+    const user = await currentUser();
+    if (!user) throw new Error("Unauthorized");
+
+    // Delete the ticket
+    await Request.findOneAndDelete({
+      senderId: user.id,
+      receiverId: receiverClerkId,
+      status: "pending"
+    });
+
+    // Remove notification from receiver
+    await UserModel.findOneAndUpdate(
+      { clerkId: receiverClerkId },
+      { $pull: { friendRequests: user.id } }
+    );
+
+    return { success: true, message: "Request Cancelled" };
+  } catch (error) {
+    console.log("Error cancelling:", error);
+    return { success: false, message: "Failed to cancel" };
+  }
+}

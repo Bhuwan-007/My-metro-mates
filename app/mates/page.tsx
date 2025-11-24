@@ -2,6 +2,7 @@ import { createUser, getMyMates } from "@/actions/user.actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import RequestButtons from "@/components/RequestButtons";
+import FriendButtons from "@/components/FriendButtons";
 
 export default async function MatesPage() {
   const user = await createUser();
@@ -45,6 +46,13 @@ export default async function MatesPage() {
                                 <div>
                                     <h3 className="font-bold text-white">{req.firstName} {req.lastName}</h3>
                                     <p className="text-xs text-zinc-500">{req.homeStation} • {req.startTime}</p>
+                                    <a 
+                                        href={req.contactMethod === 'whatsapp' ? `https://wa.me/${req.contactValue}` : `https://instagram.com/${req.contactValue}`}
+                                        target="_blank"
+                                        className="text-[10px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded border border-zinc-700 hover:text-white hover:border-zinc-500 transition-colors flex items-center gap-1 w-fit"
+                                    >
+                                        <span>🔍</span> Check {req.contactMethod === 'whatsapp' ? 'Number' : 'Social'}
+                                    </a>
                                 </div>
                             </div>
 
@@ -72,7 +80,7 @@ export default async function MatesPage() {
                 <div className="space-y-3">
                     {friends.map((friend: any) => (
                         <div key={friend.clerkId} className="bg-zinc-900/50 border border-zinc-800/50 p-5 rounded-3xl">
-                            <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-start justify-between mb-0.5">
                                 <div className="flex items-center gap-3">
                                     <img src={friend.imageUrl} className="w-12 h-12 rounded-xl object-cover" />
                                     <div>
@@ -83,18 +91,13 @@ export default async function MatesPage() {
                                     </div>
                                 </div>
                                 {/* Contact Button */}
+                                {/* New Smart Buttons (Visit + Unfriend) */}
                                 <div className="text-right">
-                                    <a 
-                                        href={friend.contactMethod === 'whatsapp' ? `https://wa.me/${friend.contactValue}` : `https://instagram.com/${friend.contactValue}`}
-                                        target="_blank"
-                                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-transform active:scale-95 ${
-                                            friend.contactMethod === 'whatsapp' 
-                                            ? 'bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20' 
-                                            : 'bg-pink-500/10 text-pink-400 border border-pink-500/20 hover:bg-pink-500/20'
-                                        }`}
-                                    >
-                                        {friend.contactMethod === 'whatsapp' ? 'WhatsApp' : 'Instagram'} ↗
-                                    </a>
+                                    <FriendButtons 
+                                        friendId={friend.clerkId} 
+                                        contactMethod={friend.contactMethod} 
+                                        contactValue={friend.contactValue} 
+                                    />
                                 </div>
                             </div>
                             {friend.bio && (
