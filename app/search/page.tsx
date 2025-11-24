@@ -2,13 +2,29 @@ import { createUser, getMatches } from "@/actions/user.actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import ConnectButton from "@/components/ConnectButton";
+import FilterBar from "@/components/FilterBar";
 
-export default async function SearchPage() {
+// 1. Updated to accept searchParams for filtering
+export default async function SearchPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ time?: string, gender?: string }> 
+}) {
+  
+  // 2. Await the params
+  const params = await searchParams;
+
   const user = await createUser();
   if (!user) redirect("/");
   if (!user.onboarded) redirect("/onboarding");
 
-  const matches = await getMatches(user.clerkId);
+  // 3. Pass filters to the backend
+  const matches = await getMatches(
+      user.clerkId, 
+      params.time === "true", 
+      params.gender
+  );
+  
   const requestCount = user.friendRequests?.length || 0;
 
   return (
@@ -19,7 +35,7 @@ export default async function SearchPage() {
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-blue-900/20 blur-[100px] rounded-full pointer-events-none"></div>
 
       {/* --- HEADER --- */}
-      <div className="relative z-10 px-6 pt-10 pb-8 max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="relative z-10 px-6 pt-10 pb-4 max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
             <span className="text-blue-500 text-xs font-bold tracking-[0.2em] uppercase mb-1 block">Target Sector</span>
             <h1 className="text-4xl font-black text-white tracking-tight uppercase">
@@ -32,7 +48,7 @@ export default async function SearchPage() {
         <Link href="/mates" className="group flex items-center gap-3 px-5 py-3 bg-zinc-900 border border-zinc-800 rounded-full hover:border-blue-500/50 transition-all">
             <span className="text-sm font-bold text-zinc-300 group-hover:text-white">My Network</span>
             
-            {/* Notification Badge Logic */}
+            {/* Notification Logic */}
             {requestCount > 0 ? (
                 <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse">
                     {requestCount} NEW
@@ -43,37 +59,42 @@ export default async function SearchPage() {
         </Link>
       </div>
 
+      {/* --- FILTER BAR --- */}
+      <div className="relative z-10 px-6 mb-8 max-w-6xl mx-auto">
+         <FilterBar />
+      </div>
+
       {/* --- THE GRID LAYOUT --- */}
       <div className="relative z-10 px-6 max-w-6xl mx-auto">
         
         {matches.length === 0 && (
             <div className="py-32 text-center border border-dashed border-zinc-800 rounded-3xl">
                 <p className="text-zinc-600 font-mono">NO_SIGNALS_FOUND_IN_VICINITY</p>
+                <p className="text-zinc-700 text-xs mt-2">Try adjusting filters.</p>
             </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {matches.map((match: any) => {
                 
-                // --- 🕒 LOGIC: Check for "Live Time" ---
+                // --- 🕒 LIVE TIME LOGIC ---
                 let displayTime = match.startTime;
                 let isLive = false;
 
                 if (match.todaysTime && match.lastStatusUpdate) {
                     const statusDate = new Date(match.lastStatusUpdate);
                     const today = new Date();
-                    
                     if (statusDate.getDate() === today.getDate() && statusDate.getMonth() === today.getMonth()) {
                         displayTime = match.todaysTime;
                         isLive = true;
                     }
                 }
-                // ---------------------------------------
+                // ---------------------------
 
                 return (
                 <div key={match.clerkId} className="group relative h-[240px] bg-[#050505] border border-zinc-800 hover:border-blue-500/50 rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
                     
-                    {/* 1. THE SILHOUETTE (Right Side) */}
+                    {/* 1. THE SILHOUETTE */}
                     <div className="absolute right-[-20px] bottom-[-20px] w-[180px] h-[180px] transition-all duration-500 group-hover:scale-105 opacity-40 group-hover:opacity-100">
                         <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                             <defs>
@@ -87,7 +108,7 @@ export default async function SearchPage() {
                         </svg>
                     </div>
 
-                    {/* 2. THE CONTENT (Left Side) */}
+                    {/* 2. THE CONTENT */}
                     <div className="absolute inset-0 p-5 flex flex-col justify-between z-10">
                         
                         {/* Top: Name & Route */}
@@ -101,12 +122,10 @@ export default async function SearchPage() {
                                     <span className="text-[9px] bg-blue-900/40 text-blue-300 border border-blue-800 px-1.5 py-0.5 rounded tracking-wider font-bold uppercase">Student</span>
                                 </div>
                             </div>
-                            
                             <div className="space-y-1 mb-3">
                                 <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold">From Station</p>
                                 <p className="text-sm text-zinc-300 font-medium truncate max-w-[180px]">{match.homeStation}</p>
                             </div>
-
                             {match.bio && (
                                 <p className="text-xs text-zinc-500 italic line-clamp-2 max-w-[200px]">"{match.bio}"</p>
                             )}
@@ -115,9 +134,9 @@ export default async function SearchPage() {
                         {/* Bottom: Stats & Action */}
                         <div className="flex items-end justify-between mt-2">
                             
-                            {/* Left: Stats */}
+                            {/* Left: Stats (WITH LIVE TIME) */}
                             <div className="flex flex-col gap-1">
-                                <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono">
+                                <div className="flex items-center gap-2 text-xs font-mono">
                                     <span className={isLive ? "text-blue-400 font-bold" : "text-zinc-400"}>
                                         {isLive ? "🔴" : "🕒"} {displayTime}
                                     </span>
@@ -128,11 +147,11 @@ export default async function SearchPage() {
                                 </div>
                             </div>
                             
-                            {/* RIGHT SIDE: SMART BUTTON LOGIC 👇 */}
+                            {/* SMART BUTTONS */}
                             {(() => {
                                 if (match.isFriend) {
                                     return (
-                                        <button disabled className="bg-green-900/20 border border-green-900 text-green-400 px-6 py-2 rounded-lg text-[10px] font-extrabold tracking-wide cursor-default flex items-center gap-2 uppercase shadow-[0_0_10px_rgba(74,222,128,0.1)]">
+                                        <button disabled className="bg-green-900/20 border border-green-900 text-green-400 px-4 py-2 rounded-lg text-[10px] font-extrabold tracking-wide cursor-default flex items-center gap-2 uppercase shadow-[0_0_10px_rgba(74,222,128,0.1)]">
                                             <span>🤝</span> Companion
                                         </button>
                                     );
@@ -140,7 +159,7 @@ export default async function SearchPage() {
                                 else if (match.hasIncomingRequest) {
                                     return (
                                         <Link href="/mates">
-                                            <button className="bg-yellow-900/20 border border-yellow-700 text-yellow-500 px-6 py-2 rounded-lg text-[10px] font-extrabold tracking-wide flex items-center gap-2 uppercase hover:bg-yellow-900/40 transition-colors shadow-[0_0_10px_rgba(234,179,8,0.1)]">
+                                            <button className="bg-yellow-900/20 border border-yellow-700 text-yellow-500 px-4 py-2 rounded-lg text-[10px] font-extrabold tracking-wide flex items-center gap-2 uppercase hover:bg-yellow-900/40 transition-colors shadow-[0_0_10px_rgba(234,179,8,0.1)]">
                                                 <span>📬</span> Accept
                                             </button>
                                         </Link>
@@ -158,10 +177,7 @@ export default async function SearchPage() {
                         </div>
 
                     </div>
-
-                    {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent pointer-events-none"></div>
-
                 </div>
             )})}
         </div>
@@ -176,8 +192,6 @@ export default async function SearchPage() {
             </Link>
             <Link href="/mates" className="relative p-3 rounded-full bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                
-                {/* Dock Notification Dot */}
                 {requestCount > 0 && (
                     <span className="absolute top-2 right-2 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-blue-600"></span>
                 )}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateUser } from "@/actions/user.actions";
-import { METRO_STATIONS, LINES } from "@/lib/metroData"; // Ensure LINES is exported in metroData.ts
+import { METRO_STATIONS, LINES } from "@/lib/metroData"; 
 
 interface OnboardingFormProps {
   user: any;
@@ -13,8 +13,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // UPDATE THIS SECTION 👇
-  // We use "||" to fall back to empty string if the data is missing
+  // 1. UPDATE STATE: Added 'gender'
   const [formData, setFormData] = useState({
     homeStation: user.homeStation || "",
     collegeStation: user.collegeStation || "",
@@ -22,12 +21,14 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
     contactMethod: user.contactMethod || "instagram",
     contactValue: user.contactValue || "",
     bio: user.bio || "",
+    gender: user.gender || "", // 
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    // 2. UPDATE SUBMISSION: Sending 'gender' to the backend
     await updateUser({
       clerkId: user.clerkId,
       homeStation: formData.homeStation,
@@ -36,22 +37,22 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
       bio: formData.bio,
       contactMethod: formData.contactMethod,
       contactValue: formData.contactValue,
+      gender: formData.gender, // <--- Fixed the Error here!
     });
 
     router.push("/dashboard");
-    router.refresh();
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
       
-      {/* 1. Route Selection (Now Categorized!) */}
+      {/* Route Selection */}
       <div className="space-y-4 rounded-2xl bg-white/5 p-6 border border-white/10">
         <h3 className="text-xl font-bold text-blue-400 flex items-center gap-2">
           🚇 Your Daily Route
         </h3>
         
-        {/* Home Station Dropdown */}
+        {/* Home Station */}
         <div>
           <label className="block text-sm font-medium text-gray-400 mb-1">Home Station</label>
           <select
@@ -61,7 +62,6 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
             onChange={(e) => setFormData({ ...formData, homeStation: e.target.value })}
           >
             <option value="" disabled>Select Station</option>
-            {/* Grouping by Line */}
             {LINES.map((line) => (
               <optgroup key={line} label={`${line} Line`}>
                 {METRO_STATIONS.filter(s => s.line === line).map((station) => (
@@ -74,7 +74,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
           </select>
         </div>
 
-        {/* College Station Dropdown */}
+        {/* College Station */}
         <div>
           <label className="block text-sm font-medium text-gray-400 mb-1">College Station</label>
           <select
@@ -96,27 +96,44 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
           </select>
         </div>
 
-        {/* Start Time */}
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1">Usually start at</label>
-          <input
-            type="time"
-            required
-            className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
-            value={formData.startTime}
-            onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-          />
+        <div className="grid grid-cols-2 gap-4">
+            {/* Start Time */}
+            <div>
+            <label className="block text-sm font-medium text-gray-400 mb-1">Start Time</label>
+            <input
+                type="time"
+                required
+                className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
+                value={formData.startTime}
+                onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+            />
+            </div>
+
+            {/* 3. NEW UI: Gender Selection */}
+            <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Gender</label>
+                <select
+                    required
+                    className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
+                    value={formData.gender}
+                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                >
+                    <option value="" disabled>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
         </div>
       </div>
 
-      {/* 2. Contact Preference (WhatsApp vs Insta) */}
+      {/* Contact Preference */}
       <div className="space-y-4 rounded-2xl bg-white/5 p-6 border border-white/10">
         <h3 className="text-xl font-bold text-green-400 flex items-center gap-2">
           📞 Contact Info
         </h3>
         <p className="text-xs text-gray-500">This will only be shared with people you accept.</p>
 
-        {/* The Toggle Switch */}
         <div className="flex gap-4 mb-2">
             <button
                 type="button"
@@ -134,7 +151,6 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
             </button>
         </div>
 
-        {/* The Input Field (Changes based on toggle) */}
         <div>
           <div className="relative">
              <span className="absolute left-3 top-3 text-gray-500">

@@ -29,6 +29,8 @@ export interface IUser extends Document {
 
   todaysTime?: string; 
   lastStatusUpdate?: Date;
+
+  gender: "male" | "female" | "other";
 }
 
 const UserSchema = new Schema<IUser>(
@@ -58,6 +60,8 @@ const UserSchema = new Schema<IUser>(
 
     todaysTime: { type: String },
     lastStatusUpdate: { type: Date },
+
+    gender: { type: String, enum: ["male", "female", "other"]},
   },
   { timestamps: true }
 );
