@@ -1,6 +1,7 @@
 import { createUser, getMyMates } from "@/actions/user.actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import RequestButtons from "@/components/RequestButtons";
 
 export default async function MatesPage() {
   const user = await createUser();
@@ -48,14 +49,7 @@ export default async function MatesPage() {
                             </div>
 
                             {/* Action Buttons (We will wire these next!) */}
-                            <div className="flex gap-2">
-                                <button className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-400 hover:text-red-400 hover:border-red-500/50 flex items-center justify-center transition-all">
-                                    ✕
-                                </button>
-                                <button className="w-8 h-8 rounded-full bg-blue-600 text-white hover:bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-900/20 transition-all">
-                                    ✓
-                                </button>
-                            </div>
+                            <RequestButtons senderId={req.clerkId} />
                         </div>
                     ))}
                 </div>

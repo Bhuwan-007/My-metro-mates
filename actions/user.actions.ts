@@ -122,41 +122,45 @@ export async function getMatches(currentUserId: string) {
   try {
     await connectDB();
 
-    // 1. Get the current user's details first
+    // 1. Get Current User (contains friendRequests array and friends array)
     const currentUser = await UserModel.findOne({ clerkId: currentUserId });
     if (!currentUser) return [];
 
+    // 2. Get Requests I SENT (Outgoing)
     const sentRequests = await RequestModel.find({
       senderId: currentUserId,
       status: "pending"
     });
     const sentRequestIds = sentRequests.map((req) => req.receiverId);
 
-    // 2. THE ALGORITHM 🤖
-    // Find users who:
-    // - Are NOT me ($ne = Not Equal)
-    // - Go to the SAME College Station
-    // - Are Onboarded (Have a profile)
-    // - Are Verified
+    // 3. Get Requests I RECEIVED (Incoming)
+    // We can just use the array from the user profile we already fetched!
+    const incomingRequestIds = currentUser.friendRequests || [];
+
+    // 4. Fetch Matches
     const matches = await UserModel.find({
-      clerkId: { $ne: currentUserId },
+      clerkId: { $ne: currentUserId }, 
       collegeStation: currentUser.collegeStation,
       onboarded: true,
       isVerified: true,
-    }).select("_id clerkId firstName lastName homeStation startTime imageUrl bio contactMethod friends");
-    // ^ We only select safe fields (don't send their email or ID card URL!)
+    }).select("_id clerkId firstName lastName homeStation startTime imageUrl bio contactMethod friends"); 
 
-    // 4. Merge the data
-    // We check each match: "Is this person's ID in my 'sentRequestIds' list?"
+    // 5. Add ALL Status Flags
     const matchesWithStatus = matches.map((match) => ({
-      ...match.toObject(), // Convert Mongoose object to JS object
-      hasPendingRequest: sentRequestIds.includes(match.clerkId) // <--- TRUE or FALSE
+      ...match.toObject(), 
+      
+      // Status A: Did I send them a request?
+      hasPendingRequest: sentRequestIds.includes(match.clerkId),
+      
+      // Status B: Did THEY send ME a request?
+      hasIncomingRequest: incomingRequestIds.includes(match.clerkId),
+      
+      // Status C: Are we already friends?
+      isFriend: currentUser.friends.includes(match.clerkId)
     }));
 
-    // Correctly return the modified array
     return JSON.parse(JSON.stringify(matchesWithStatus));
-  } 
-  catch (error) {
+  } catch (error) {
     console.log("Error fetching matches:", error);
     return [];
   }

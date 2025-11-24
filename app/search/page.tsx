@@ -132,10 +132,36 @@ export default async function SearchPage() {
                             </div>
                             
                             {/* Connect Button */}
-                            <ConnectButton 
-                                receiverId={match.clerkId} 
-                                isPending={match.hasPendingRequest} 
-                            />
+                            {/* --- NEW SMART LOGIC (3 States) --- */}
+                            {(() => {
+                                if (match.isFriend) {
+                                    // STATE 1: ALREADY FRIENDS
+                                    return (
+                                        <button disabled className="bg-green-900/20 border border-green-900 text-green-400 px-6 py-2 rounded-lg text-[10px] font-extrabold tracking-wide cursor-default flex items-center gap-2 uppercase shadow-[0_0_10px_rgba(74,222,128,0.1)]">
+                                            <span>🤝</span> Companion
+                                        </button>
+                                    );
+                                } 
+                                else if (match.hasIncomingRequest) {
+                                    // STATE 2: THEY REQUESTED ME (Go to Inbox)
+                                    return (
+                                        <Link href="/mates">
+                                            <button className="bg-yellow-900/20 border border-yellow-700 text-yellow-500 px-6 py-2 rounded-lg text-[10px] font-extrabold tracking-wide flex items-center gap-2 uppercase hover:bg-yellow-900/40 transition-colors shadow-[0_0_10px_rgba(234,179,8,0.1)]">
+                                                <span>📬</span> Accept
+                                            </button>
+                                        </Link>
+                                    );
+                                } 
+                                else {
+                                    // STATE 3: STRANGER (Connect or Request Sent)
+                                    return (
+                                        <ConnectButton 
+                                            receiverId={match.clerkId} 
+                                            isPending={match.hasPendingRequest} 
+                                        />
+                                    );
+                                }
+                            })()}
                         </div>
 
                     </div>

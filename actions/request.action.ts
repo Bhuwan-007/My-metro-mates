@@ -5,13 +5,14 @@ import Request from "@/lib/models/Request";
 import UserModel from "@/lib/models/User";
 import { currentUser } from "@clerk/nextjs/server";
 
+// --- 1. SEND REQUEST ---
 export async function sendFriendRequest(receiverClerkId: string) {
   try {
     await connectDB();
     const user = await currentUser();
     if (!user) throw new Error("Unauthorized");
 
-    // 1. Check duplicates
+    // Check duplicates
     const existingRequest = await Request.findOne({
       senderId: user.id,
       receiverId: receiverClerkId,
@@ -21,22 +22,96 @@ export async function sendFriendRequest(receiverClerkId: string) {
       return { success: false, message: "Request already sent!" };
     }
 
-    // 2. Create Ticket
+    // Create Ticket
     await Request.create({
       senderId: user.id,
       receiverId: receiverClerkId,
       status: "pending",
     });
 
-    // 3. Update Receiver's List
+    // Update Receiver's List
     await UserModel.findOneAndUpdate(
       { clerkId: receiverClerkId },
-      { $push: { friendRequests: user.id } } // <--- This requires File 1 to be correct!
+      { $push: { friendRequests: user.id } } 
     );
 
     return { success: true, message: "Request Sent!" };
   } catch (error: any) {
     console.log("Error sending request:", error);
     return { success: false, message: "Failed to send request" };
+  }
+}
+
+// --- 2. ACCEPT REQUEST (Improved Logic) ---
+export async function acceptFriendRequest(senderClerkId: string) {
+  try {
+    await connectDB();
+    const user = await currentUser();
+    if (!user) throw new Error("Unauthorized");
+
+    // Verify request exists
+    const request = await Request.findOne({
+      senderId: senderClerkId,
+      receiverId: user.id,
+      status: "pending",
+    });
+
+    if (!request) return { success: false, message: "Request not found" };
+
+    // ATOMIC UPDATE: Add to friends list (Using $addToSet to prevent duplicates)
+    
+    // Update ME (Receiver)
+    await UserModel.findOneAndUpdate(
+      { clerkId: user.id },
+      { 
+        $addToSet: { friends: senderClerkId }, 
+        $pull: { friendRequests: senderClerkId } 
+      }
+    );
+
+    // Update SENDER
+    await UserModel.findOneAndUpdate(
+      { clerkId: senderClerkId },
+      { $addToSet: { friends: user.id } }
+    );
+
+    // CLEANUP: Delete ALL requests between these two users (A->B and B->A)
+    await Request.deleteMany({
+      $or: [
+        { senderId: senderClerkId, receiverId: user.id },
+        { senderId: user.id, receiverId: senderClerkId }
+      ]
+    });
+
+    return { success: true, message: "Connected!" };
+  } catch (error) {
+    console.log("Error accepting request:", error);
+    return { success: false, message: "Failed to accept" };
+  }
+}
+
+// --- 3. REJECT REQUEST (Restored!) ---
+export async function rejectFriendRequest(senderClerkId: string) {
+  try {
+    await connectDB();
+    const user = await currentUser();
+    if (!user) throw new Error("Unauthorized");
+
+    // 1. Delete the ticket in the Request Collection
+    await Request.findOneAndDelete({
+      senderId: senderClerkId,
+      receiverId: user.id,
+    });
+
+    // 2. Remove notification from YOUR profile array
+    await UserModel.findOneAndUpdate(
+      { clerkId: user.id },
+      { $pull: { friendRequests: senderClerkId } }
+    );
+
+    return { success: true, message: "Request Rejected" };
+  } catch (error) {
+    console.log("Error rejecting:", error);
+    return { success: false, message: "Failed to reject" };
   }
 }
