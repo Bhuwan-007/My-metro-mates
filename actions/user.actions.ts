@@ -4,6 +4,7 @@ import UserModel from "@/lib/models/User";
 import { connectDB } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import RequestModel from "@/lib/models/Request";
 
 export async function createUser() {
   try {
@@ -125,6 +126,12 @@ export async function getMatches(currentUserId: string) {
     const currentUser = await UserModel.findOne({ clerkId: currentUserId });
     if (!currentUser) return [];
 
+    const sentRequests = await RequestModel.find({
+      senderId: currentUserId,
+      status: "pending"
+    });
+    const sentRequestIds = sentRequests.map((req) => req.receiverId);
+
     // 2. THE ALGORITHM 🤖
     // Find users who:
     // - Are NOT me ($ne = Not Equal)
@@ -139,9 +146,48 @@ export async function getMatches(currentUserId: string) {
     }).select("_id clerkId firstName lastName homeStation startTime imageUrl bio contactMethod friends");
     // ^ We only select safe fields (don't send their email or ID card URL!)
 
-    return JSON.parse(JSON.stringify(matches));
-  } catch (error) {
+    // 4. Merge the data
+    // We check each match: "Is this person's ID in my 'sentRequestIds' list?"
+    const matchesWithStatus = matches.map((match) => ({
+      ...match.toObject(), // Convert Mongoose object to JS object
+      hasPendingRequest: sentRequestIds.includes(match.clerkId) // <--- TRUE or FALSE
+    }));
+
+    // Correctly return the modified array
+    return JSON.parse(JSON.stringify(matchesWithStatus));
+  } 
+  catch (error) {
     console.log("Error fetching matches:", error);
     return [];
+  }
+}
+
+
+export async function getMyMates(currentUserId: string) {
+  try {
+    await connectDB();
+    
+    const currentUser = await UserModel.findOne({ clerkId: currentUserId });
+    if (!currentUser) return { requests: [], friends: [] };
+
+    // 1. Fetch details for Pending Requests
+    // $in is a MongoDB magic operator: "Find all users whose clerkId is INSIDE this array"
+    const requests = await UserModel.find({
+      clerkId: { $in: currentUser.friendRequests }
+    }).select("clerkId firstName lastName imageUrl homeStation startTime");
+
+    // 2. Fetch details for Accepted Friends
+    const friends = await UserModel.find({
+      clerkId: { $in: currentUser.friends }
+    }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue bio");
+
+    return {
+      requests: JSON.parse(JSON.stringify(requests)),
+      friends: JSON.parse(JSON.stringify(friends))
+    };
+
+  } catch (error) {
+    console.log("Error fetching mates:", error);
+    return { requests: [], friends: [] };
   }
 }

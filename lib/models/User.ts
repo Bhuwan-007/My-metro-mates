@@ -23,6 +23,9 @@ export interface IUser extends Document {
   idCardUrl?: string;
   rejectionReason?: string;
   onboarded: boolean;
+
+  friends: string[];        // Array of Clerk IDs
+  friendRequests: string[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -46,6 +49,9 @@ const UserSchema = new Schema<IUser>(
     idCardUrl: { type: String },
     rejectionReason: { type: String, default: "" },
     onboarded: { type: Boolean, default: false },
+
+    friends: { type: [String], default: [] },
+    friendRequests: { type: [String], default: [] },
   },
   { timestamps: true }
 );

@@ -1,6 +1,7 @@
 import { createUser, getMatches } from "@/actions/user.actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import ConnectButton from "@/components/ConnectButton";
 
 export default async function SearchPage() {
   const user = await createUser();
@@ -8,6 +9,7 @@ export default async function SearchPage() {
   if (!user.onboarded) redirect("/onboarding");
 
   const matches = await getMatches(user.clerkId);
+  const requestCount = user.friendRequests?.length || 0;
 
   return (
     <div className="min-h-screen bg-black text-white pb-32 font-sans selection:bg-blue-500/30">
@@ -28,8 +30,16 @@ export default async function SearchPage() {
             </p>
         </div>
         <Link href="/mates" className="group flex items-center gap-3 px-5 py-3 bg-zinc-900 border border-zinc-800 rounded-full hover:border-blue-500/50 transition-all">
-            <span className="text-sm font-bold text-zinc-300 group-hover:text-white cursor-pointer">My Network</span>
-            <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-sm font-bold text-zinc-300 group-hover:text-white">My Network</span>
+            
+            {/* LOGIC: If requests > 0, show Red Badge. Else show Green Pulse. */}
+            {requestCount > 0 ? (
+                <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse">
+                    {requestCount} NEW
+                </span>
+            ) : (
+                <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
+            )}
         </Link>
       </div>
 
@@ -122,9 +132,10 @@ export default async function SearchPage() {
                             </div>
                             
                             {/* Connect Button */}
-                            <button className="text-[10px] font-bold text-black bg-white hover:bg-blue-200 cursor-pointer px-4 py-2 rounded-lg shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all active:scale-95 uppercase tracking-wide">
-                                Connect
-                            </button>
+                            <ConnectButton 
+                                receiverId={match.clerkId} 
+                                isPending={match.hasPendingRequest} 
+                            />
                         </div>
 
                     </div>
