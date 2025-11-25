@@ -1,5 +1,5 @@
 import { createUser } from "@/actions/user.actions"; 
-import UploadCard from "@/components/uploadCard"; 
+import UploadCard from "@/components/Upload"; 
 import { SignOutButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation"; // <--- 1. Import redirect
 
