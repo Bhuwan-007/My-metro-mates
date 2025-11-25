@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
@@ -14,6 +14,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "My Metro Mates",
   description: "Find your college commute partner",
+  manifest: "/manifest.json", // <--- LINK THE MANIFEST
+  icons: { apple: "/icon-192.png" }
+};
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 export default async function RootLayout({
@@ -25,7 +30,7 @@ export default async function RootLayout({
   const user = await currentUser();
   
   // 2. Default Access Rules
-  const allowedDomains = ["@std.ggsipu.ac.in"]; 
+  const allowedDomains = ["@std.ggsipu.ac.in", "@mait.ac.in"]; 
   
   // Start as FALSE (Blocked) by default for safety
   let isAllowed = false; 

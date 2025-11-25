@@ -140,7 +140,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
         <h3 className="text-xl font-bold text-green-400 flex items-center gap-2">
           📞 Contact Info
         </h3>
-        <p className="text-s text-gray-300"><strong>Shared with: People you've requested and people whose requests you've accepted.</strong></p>
+        <p className="text-xs text-gray-300"><strong>Shared with: People you've requested and people whose requests you've accepted.</strong></p>
 
         <div className="flex gap-4 mb-2">
             <button

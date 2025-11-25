@@ -287,3 +287,25 @@ export async function rejectUser(clerkId: string, reason: string) {
     return { success: false };
   }
 }
+
+// ... existing imports
+
+// NEW ACTION: Update Bio Only
+export async function updateBio(bio: string) {
+  try {
+    await connectDB();
+    const user = await currentUser();
+    if (!user) throw new Error("Unauthorized");
+
+    await UserModel.findOneAndUpdate(
+      { clerkId: user.id },
+      { bio: bio }
+    );
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.log("Error updating bio:", error);
+    return { success: false };
+  }
+}

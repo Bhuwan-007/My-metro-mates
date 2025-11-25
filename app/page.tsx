@@ -47,6 +47,11 @@ export default async function Home() { // <--- 2. Make component Async
 
         {/* SCENARIO 1: NOT Logged In */}
         <SignedOut>
+          <div className="mb-2 text-center">
+                <p className="text-[10px] text-yellow-500/80 font-mono uppercase tracking-widest bg-yellow-500/10 py-1 px-2 rounded border border-yellow-500/20 inline-block">
+                   ⚠ College E-mail login Currently for USAR Students Only
+                </p>
+             </div>
           <div className="mx-auto flex flex-col gap-4 w-full max-w-xs">
              
              {/* OPTION A: The Happy Path (College Email) */}

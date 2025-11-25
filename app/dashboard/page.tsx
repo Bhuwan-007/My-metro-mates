@@ -3,6 +3,7 @@ import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import StatusWidget from "@/components/StatusWidget";
+import BioWidget from "@/components/BioWidget";
 
 export default async function DashboardPage() {
   // 1. Get User Data
@@ -25,10 +26,10 @@ export default async function DashboardPage() {
     }
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 pb-20">
+    <div className="min-h-screen bg-black text-white pb-32 font-sans selection:bg-blue-500/30">
       
-      {/* Background Grid */}
-      <div className="fixed inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-blue-900/20 blur-[100px] rounded-full pointer-events-none"></div>
 
       {/* --- NAVBAR --- */}
       <div className="relative z-10 flex items-center justify-between max-w-4xl mx-auto py-6 mb-8">
@@ -90,6 +91,8 @@ export default async function DashboardPage() {
                     </div>
                 </div>
             </div>
+            {/* --- BIO WIDGET (Editable) --- */}
+        <BioWidget initialBio={user.bio || ""} />
         </div>
 
         {/* CARD 2: Stats & Action */}
@@ -110,6 +113,18 @@ export default async function DashboardPage() {
                     <span>🔍</span> Find Travel Partners
                 </button>
             </Link>
+
+            {/* Footer Info */}
+            <div className="text-center mt-12 pb-8">
+                <Link href="/about" className="inline-block group">
+                    <p className="text-zinc-600 text-xs font-medium mb-1 group-hover:text-zinc-400 transition-colors">
+                        Designed & Built by <span className="text-zinc-300 underline decoration-zinc-700 group-hover:decoration-blue-500">Bhuwan Chugh</span>
+                    </p>
+                    <p className="text-[10px] text-zinc-700 font-mono">
+                        v1.0 • IP University
+                    </p>
+                </Link>
+            </div>
 
         </div>
       </div>
