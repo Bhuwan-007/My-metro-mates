@@ -15,7 +15,10 @@ export const metadata: Metadata = {
   title: "My Metro Mates",
   description: "Find your college commute partner",
   manifest: "/manifest.json", // <--- LINK THE MANIFEST
-  icons: { apple: "/icon-192.png" }
+  icons: {
+    icon: "/icon-192.png", 
+    apple: "/icon-192.png",
+  }
 };
 export const viewport: Viewport = {
   themeColor: "#000000",
