@@ -5,6 +5,7 @@ import UserModel from "@/lib/models/User";
 import RequestModel from "@/lib/models/Request";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { getStationData } from "@/lib/metroData";
 
 // --- 1. CREATE / SYNC USER (Login) ---
 export async function createUser() {
@@ -99,50 +100,92 @@ export async function updateUser(params: UpdateUserParams) {
 }
 
 // --- 4. SEARCH MATCHES (The Algorithm) ---
-export async function getMatches(currentUserId: string, filterTime?: boolean, filterGender?: string) {
+export async function getMatches(
+    currentUserId: string, 
+    filterTime?: boolean, 
+    filterGender?: string,
+    filterMode?: string // <--- New Param
+) {
   try {
     await connectDB();
 
-    // Get Current User Data
     const currentUser = await UserModel.findOne({ clerkId: currentUserId });
     if (!currentUser) return [];
 
-    // --- BUILD QUERY ---
+    // --- 1. BASE QUERY ---
     let query: any = {
-      clerkId: { $ne: currentUserId }, // Exclude self
-      collegeStation: currentUser.collegeStation, // Must go to same college station
+      clerkId: { $ne: currentUserId },
       onboarded: true,
       isVerified: true,
     };
 
-    // Gender Filter Logic
     if (filterGender && filterGender !== "all") {
       query.gender = filterGender;
     }
 
-    // --- FETCH DATA ---
-    const matches = await UserModel.find(query).select("_id clerkId firstName lastName homeStation startTime imageUrl bio contactMethod friends todaysTime lastStatusUpdate gender");
+    // --- 2. MODE LOGIC ---
+    if (filterMode === "route") {
+        // ROUTE MATCHING: Fetch everyone (we filter by math later)
+        // No specific college filter here.
+    } else {
+        // COLLEGE MATCHING (Default): Must go to same station
+        query.collegeStation = currentUser.collegeStation;
+    }
 
-    // --- TIME FILTER LOGIC (JavaScript) ---
-    let filteredMatches = matches;
+    // --- 3. FETCH DATA ---
+    // We need 'homeStation' and 'collegeStation' to calculate the route
+    const matches = await UserModel.find(query).select("_id clerkId firstName lastName homeStation collegeStation startTime imageUrl bio contactMethod friends todaysTime lastStatusUpdate gender");
 
-    if (filterTime) {
-        const myTimeMinutes = convertToMinutes(getLiveTime(currentUser));
+    // --- 4. JS FILTERING (Time & Route Overlap) ---
+    const myHome = getStationData(currentUser.homeStation);
+    const myCollege = getStationData(currentUser.collegeStation);
+
+    let filteredMatches = matches.filter((match: any) => {
         
-        filteredMatches = matches.filter((match: any) => {
+        // A. TIME FILTER
+        if (filterTime) {
+            const myTimeMinutes = convertToMinutes(getLiveTime(currentUser));
             const theirTimeStr = getLiveTime(match);
             const theirTimeMinutes = convertToMinutes(theirTimeStr);
             const diff = Math.abs(myTimeMinutes - theirTimeMinutes);
-            return diff <= 60; // +/- 60 minutes
-        });
-    }
+            if (diff > 60) return false;
+        }
 
-    // --- FETCH REQUEST STATUS ---
+        // B. ROUTE OVERLAP FILTER (The Math 🧮)
+        if (filterMode === "route") {
+            const theirHome = getStationData(match.homeStation);
+            const theirCollege = getStationData(match.collegeStation);
+
+            // Safety: If station not found in our list, skip
+            if (!myHome || !myCollege || !theirHome || !theirCollege) return false;
+
+            // Rule 1: Must be on the SAME LINE
+            if (myHome.line !== theirHome.line) return false;
+
+            // Rule 2: Calculate Overlap
+            // Normalize Direction (Start is always smaller index)
+            const myStart = Math.min(myHome.index, myCollege.index);
+            const myEnd = Math.max(myHome.index, myCollege.index);
+            const theirStart = Math.min(theirHome.index, theirCollege.index);
+            const theirEnd = Math.max(theirHome.index, theirCollege.index);
+
+            // Find intersection
+            const overlapStart = Math.max(myStart, theirStart);
+            const overlapEnd = Math.min(myEnd, theirEnd);
+            const overlapCount = overlapEnd - overlapStart;
+
+            // YOUR RULE: At least 4 stations overlap
+            if (overlapCount < 4) return false;
+        }
+
+        return true;
+    });
+
+    // --- 5. ADD STATUS FLAGS ---
     const sentRequests = await RequestModel.find({ senderId: currentUserId, status: "pending" });
     const sentRequestIds = sentRequests.map((req) => req.receiverId);
     const incomingRequestIds = currentUser.friendRequests || [];
 
-    // --- MERGE STATUS ---
     const matchesWithStatus = filteredMatches.map((match) => ({
       ...match.toObject(), 
       hasPendingRequest: sentRequestIds.includes(match.clerkId),
@@ -200,4 +243,47 @@ function getLiveTime(user: any) {
         }
     }
     return user.startTime;
+}
+
+// Fetch users waiting for verification
+export async function getPendingUsers() {
+  try {
+    await connectDB();
+    // Find users who have an ID Card URL but are NOT verified yet
+    const users = await UserModel.find({
+      idCardUrl: { $exists: true, $ne: "" },
+      isVerified: false,
+    }).select("clerkId firstName lastName email idCardUrl");
+    
+    return JSON.parse(JSON.stringify(users));
+  } catch (error) {
+    return [];
+  }
+}
+
+// Approve a user
+export async function approveUser(clerkId: string) {
+  try {
+    await connectDB();
+    await UserModel.findOneAndUpdate({ clerkId }, { isVerified: true });
+    revalidatePath("/admin"); // Refresh the admin list
+    return { success: true };
+  } catch (error) {
+    return { success: false };
+  }
+}
+
+// Reject a user (Reset them)
+export async function rejectUser(clerkId: string, reason: string) {
+  try {
+    await connectDB();
+    await UserModel.findOneAndUpdate({ clerkId }, { 
+        idCardUrl: "", // Clear the image
+        rejectionReason: reason // Add the note
+    });
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error) {
+    return { success: false };
+  }
 }

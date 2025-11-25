@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateUser } from "@/actions/user.actions";
 import { METRO_STATIONS, LINES } from "@/lib/metroData"; 
+import { toast } from "sonner";
 
 interface OnboardingFormProps {
   user: any;
@@ -29,7 +30,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
     setLoading(true);
 
     // 2. UPDATE SUBMISSION: Sending 'gender' to the backend
-    await updateUser({
+    const res = await updateUser({
       clerkId: user.clerkId,
       homeStation: formData.homeStation,
       collegeStation: formData.collegeStation,
@@ -39,6 +40,13 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
       contactValue: formData.contactValue,
       gender: formData.gender, // <--- Fixed the Error here!
     });
+    if (res.success) {
+        toast.success("Profile updated successfully! 🎉"); // <--- Nice feedback
+        router.push("/dashboard");
+    } else {
+        toast.error("Failed to update profile. Please try again.");
+        setLoading(false); // Stop loading so they can try again
+    }
 
     router.push("/dashboard");
   };

@@ -8,7 +8,7 @@ import FilterBar from "@/components/FilterBar";
 export default async function SearchPage({ 
   searchParams 
 }: { 
-  searchParams: Promise<{ time?: string, gender?: string }> 
+  searchParams: Promise<{ time?: string, gender?: string, mode?: string }> // <--- ADDED MODE
 }) {
   
   // 2. Await the params
@@ -22,7 +22,8 @@ export default async function SearchPage({
   const matches = await getMatches(
       user.clerkId, 
       params.time === "true", 
-      params.gender
+      params.gender,
+      params.mode
   );
   
   const requestCount = user.friendRequests?.length || 0;

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { sendFriendRequest, cancelSentRequest } from "@/actions/request.action";
+import { toast } from "sonner";
 
 export default function ConnectButton({ receiverId, isPending }: { receiverId: string, isPending: boolean }) {
   
@@ -12,8 +13,9 @@ export default function ConnectButton({ receiverId, isPending }: { receiverId: s
     const res = await sendFriendRequest(receiverId);
     if (res.success) {
       setStatus("sent");
+      toast.success("Request sent successfully!");
     } else {
-      alert(res.message);
+      toast.error(res.message);
       if (res.message === "Request already sent!") {
         setStatus("sent");
       } else {

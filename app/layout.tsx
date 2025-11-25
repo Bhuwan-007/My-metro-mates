@@ -7,6 +7,7 @@ import SecurityGate from "@/components/SecurityGate";
 // 1. NEW IMPORTS (To talk to the database)
 import { connectDB } from "@/lib/db";         
 import UserModel from "@/lib/models/User";    
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -64,6 +65,7 @@ export default async function RootLayout({
           ) : (
              children
           )}
+          <Toaster position="top-center" richColors theme="dark" />
         </body>
       </html>
     </ClerkProvider>
