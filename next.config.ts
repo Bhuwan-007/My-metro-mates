@@ -5,21 +5,23 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
 });
 
-// CHANGE IS HERE 👇 (Added ': any' to bypass the error)
+// We use 'any' to bypass strict typing and allow the 'turbopack' key
 const nextConfig: any = {
-  // 1. Disable heavy source maps to save memory on Vercel
+  // 1. Fix the "Turbopack vs Webpack" conflict
+  turbopack: {}, 
+
+  // 2. Disable heavy source maps to save memory
   productionBrowserSourceMaps: false,
 
-  // 2. Ignore linting errors during build so deployment succeeds
+  // 3. Ignore minor errors so the build finishes
   eslint: {
     ignoreDuringBuilds: true,
   },
-  
-  // 3. Ignore TS errors during build
   typescript: {
     ignoreBuildErrors: true,
   },
 
+  // 4. Image domains
   images: {
     remotePatterns: [
       { hostname: "img.clerk.com" },
