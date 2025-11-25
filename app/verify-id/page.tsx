@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { createUser } from "@/actions/user.actions"; 
 import UploadCard from "@/components/Upload"; 
 import { SignOutButton } from "@clerk/nextjs";

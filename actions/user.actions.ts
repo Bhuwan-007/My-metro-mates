@@ -6,6 +6,7 @@ import RequestModel from "@/lib/models/Request";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { getStationData } from "@/lib/metroData";
+import { redirect } from "next/navigation";
 
 // --- 1. CREATE / SYNC USER (Login) ---
 export async function createUser() {
@@ -53,7 +54,7 @@ export async function updateIdCard(imageUrl: string) {
         rejectionReason: "" // Clear rejection error on new upload
       }
     );
-    return { success: true };
+    redirect("/dashboard");
   } catch (error) {
     console.log("Error updating ID Card:", error);
     return { success: false };

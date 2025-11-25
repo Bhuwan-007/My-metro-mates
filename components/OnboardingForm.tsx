@@ -48,7 +48,6 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
         setLoading(false); // Stop loading so they can try again
     }
 
-    router.push("/dashboard");
   };
 
   return (

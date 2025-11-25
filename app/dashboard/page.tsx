@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { createUser } from "@/actions/user.actions";
 import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { createUser } from "@/actions/user.actions"; // <--- 1. Import the Sync Action
