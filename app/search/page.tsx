@@ -123,9 +123,25 @@ export default async function SearchPage({
                                     <span className="text-[9px] bg-blue-900/40 text-blue-300 border border-blue-800 px-1.5 py-0.5 rounded tracking-wider font-bold uppercase">Student</span>
                                 </div>
                             </div>
-                            <div className="space-y-1 mb-3">
-                                <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold">From Station</p>
-                                <p className="text-sm text-zinc-300 font-medium truncate max-w-[180px]">{match.homeStation}</p>
+                            {/* Route Info: FROM -> TO */}
+                            <div className="grid grid-cols-2 gap-2 mb-4 bg-zinc-900/30 p-2 rounded-lg border border-zinc-800/50">
+                                
+                                {/* FROM */}
+                                <div>
+                                    <p className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold mb-0.5">From</p>
+                                    <p className="text-xs text-zinc-200 font-semibold truncate" title={match.homeStation}>
+                                        {match.homeStation}
+                                    </p>
+                                </div>
+
+                                {/* TO (New!) */}
+                                <div>
+                                    <p className="text-[9px] text-blue-500/70 uppercase tracking-wider font-bold mb-0.5">To</p>
+                                    <p className="text-xs text-white font-semibold truncate" title={match.collegeStation}>
+                                        {match.collegeStation}
+                                    </p>
+                                </div>
+
                             </div>
                             {match.bio && (
                                 <p className="text-xs text-zinc-500 italic line-clamp-2 max-w-[200px]">"{match.bio}"</p>

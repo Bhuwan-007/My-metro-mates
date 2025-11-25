@@ -36,8 +36,12 @@ export default async function DashboardPage() {
           <span className="text-3xl">🚇</span> 
           <span>My Metro <span className="text-blue-500">Mates</span></span>
         </h1>
-        <div className="bg-white/10 p-1 pr-4 rounded-full flex items-center gap-3">
-            <div className="scale-75"><UserButton afterSignOutUrl="/"/></div>
+        {/* User Pill */}
+        <div className="bg-white/10 p-1 sm:pr-4 rounded-full flex items-center gap-3 border border-white/5">
+            {/* Added 'flex' to the wrapper to ensure the button sits tight */}
+            <div className="scale-75 flex">
+                <UserButton/>
+            </div>
             <span className="text-sm font-medium hidden sm:block">{user.firstName}</span>
         </div>
       </div>
@@ -96,7 +100,7 @@ export default async function DashboardPage() {
                 <div className="text-5xl mb-2">👋</div>
                 <h3 className="text-xl font-bold">You are ready!</h3>
                 <p className="text-gray-400 text-sm mt-1 max-w-xs">
-                    Your profile is visible to other students going to <strong>{user.collegeStation}</strong>.
+                    Your profile is visible to other students travelling through your route.
                 </p>
             </div>
 
@@ -108,11 +112,6 @@ export default async function DashboardPage() {
             </Link>
 
         </div>
-      </div>
-      
-      {/* Footer Info */}
-      <div className="text-center text-gray-600 text-xs mt-12">
-        You are part of the exclusive IP University network.
       </div>
 
     </div>

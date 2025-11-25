@@ -82,8 +82,8 @@ export default async function Home() { // <--- 2. Make component Async
         <SignedIn>
           <div className="flex flex-col items-center gap-4 rounded-xl bg-white/5 p-6 border border-white/5">
             <div className="flex items-center gap-3 mb-2">
-               <div className="scale-110 ring-2 ring-blue-500/50 rounded-full">
-                  <UserButton afterSignOutUrl="/"/>
+               <div className="scale-110 ring-2 ring-blue-500/50 rounded-full flex items-center justify-center">
+                  <UserButton/>
                </div>
                <div className="text-left">
                   <p className="text-sm text-slate-400">Currently logged in</p>
