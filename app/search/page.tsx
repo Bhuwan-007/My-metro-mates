@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import ConnectButton from "@/components/ConnectButton";
 import FilterBar from "@/components/FilterBar";
+import RefreshButton from "@/components/RefreshButton";
 
-// 1. Updated to accept searchParams for filtering
 export default async function SearchPage({ 
   searchParams 
 }: { 
@@ -46,6 +46,7 @@ export default async function SearchPage({
             <p className="text-zinc-500 text-sm mt-1 font-mono">
               // {matches.length} SIGNALS DETECTED
             </p>
+            <RefreshButton />
         </div>
         <Link href="/mates" className="group flex items-center gap-3 px-5 py-3 bg-zinc-900 border border-zinc-800 rounded-full hover:border-blue-500/50 transition-all">
             <span className="text-sm font-bold text-zinc-300 group-hover:text-white">My Network</span>

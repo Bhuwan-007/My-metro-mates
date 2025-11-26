@@ -1,8 +1,9 @@
-import { createUser, getMyMates } from "@/actions/user.actions"; // Fixed import path (singular .action)
+import { createUser, getMyMates } from "@/actions/user.actions"; 
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import RequestButtons from "@/components/RequestButtons";
 import FriendButtons from "@/components/FriendButtons";
+import RefreshButton from "@/components/RefreshButton";
 
 export default async function MatesPage() {
   const user = await createUser();
@@ -27,9 +28,12 @@ export default async function MatesPage() {
         
         {/* --- SECTION 1: PENDING REQUESTS --- */}
         <div>
-            <h2 className="text-sm font-bold text-blue-500 uppercase tracking-wider mb-4 px-2">
-                Incoming Signals ({requests.length})
-            </h2>
+            <div className="flex items-center justify-between px-2 mb-4">
+                <h2 className="text-sm font-bold text-blue-500 uppercase tracking-wider m-0 leading-none">
+                    Incoming Signals ({requests.length})
+                </h2>
+                <RefreshButton />
+            </div>
 
             {requests.length === 0 ? (
                 <div className="p-6 rounded-3xl border border-zinc-900 bg-zinc-900/30 text-zinc-500 text-sm text-center">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import RefreshButton from "@/components/RefreshButton";
 
 export default function FilterBar() {
   const router = useRouter();
@@ -51,29 +52,35 @@ export default function FilterBar() {
         </div>
 
         {/* --- 2. FINE TUNING (Gender/Time) --- */}
-        <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
-            <span className="text-xs font-bold text-zinc-600 uppercase tracking-wider">Filters:</span>
-            
-            <button 
-                onClick={() => updateFilter("time", timeFilter ? "false" : "true")}
-                className={`px-4 hover:cursor-pointer py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex items-center gap-2 ${
-                    timeFilter 
-                    ? "bg-blue-500/10 border-blue-500 text-blue-400" 
-                    : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white"
-                }`}
-            >
-                <span>⏰</span> Match Time
-            </button>
+        <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
+                <span className="text-xs font-bold text-zinc-600 uppercase tracking-wider">Filters:</span>
+                
+                <button 
+                    onClick={() => updateFilter("time", timeFilter ? "false" : "true")}
+                    className={`px-4 hover:cursor-pointer py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex items-center gap-2 ${
+                        timeFilter 
+                        ? "bg-blue-500/10 border-blue-500 text-blue-400" 
+                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white"
+                    }`}
+                >
+                    <span>⏰</span> Match My Time
+                </button>
 
-            <select 
-                value={genderFilter}
-                onChange={(e) => updateFilter("gender", e.target.value)}
-                className="bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs font-bold px-4 py-2 rounded-full outline-none focus:border-blue-500 appearance-none cursor-pointer hover:text-white"
-            >
-                <option value="all">All Genders</option>
-                <option value="male">Male Only</option>
-                <option value="female">Female Only</option>
-            </select>
+                <select 
+                    value={genderFilter}
+                    onChange={(e) => updateFilter("gender", e.target.value)}
+                    className="bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs font-bold px-4 py-2 rounded-full outline-none focus:border-blue-500 appearance-none cursor-pointer hover:text-white"
+                >
+                    <option value="all">All Genders</option>
+                    <option value="male">Male Only</option>
+                    <option value="female">Female Only</option>
+                </select>
+            </div>
+
+            <div className="pl-2 border-l border-zinc-800 shrink-0">
+                <RefreshButton />
+            </div>
         </div>
     </div>
   );

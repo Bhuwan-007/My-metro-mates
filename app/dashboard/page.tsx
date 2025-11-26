@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import StatusWidget from "@/components/StatusWidget";
 import BioWidget from "@/components/BioWidget";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export default async function DashboardPage() {
   // 1. Get User Data
@@ -114,6 +115,8 @@ export default async function DashboardPage() {
                     <span>🔍</span> Find Travel Partners
                 </button>
             </Link>
+
+            <InstallPrompt />
 
             {/* Footer Info */}
             <div className="text-center mt-12 pb-8">
