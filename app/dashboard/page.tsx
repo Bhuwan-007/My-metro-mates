@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+
 import { createUser } from "@/actions/user.actions";
 import { UserButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -6,133 +7,132 @@ import Link from "next/link";
 import StatusWidget from "@/components/StatusWidget";
 import BioWidget from "@/components/BioWidget";
 import InstallPrompt from "@/components/InstallPrompt";
+import { Outfit } from "next/font/google";
+const outfit = Outfit({ subsets: ["latin"], weight: ['500'] }); // Load Super Bold
 
 export default async function DashboardPage() {
-  // 1. Get User Data
   const user = await createUser();
-
-  // 2. Security Checks
   if (!user) redirect("/");
   if (!user.onboarded) redirect("/onboarding");
-  // LOGIC: Check if "todaysTime" is fresh (set within the last 24 hours)
-  let activeTime = ""; // This will hold the temporary time if valid
 
+  let activeTime = ""; 
   if (user.todaysTime && user.lastStatusUpdate) {
-        const statusDate = new Date(user.lastStatusUpdate);
-        const today = new Date();
-
-        // Check if it's the same day (Simple check)
-    if (statusDate.getDate() === today.getDate() && statusDate.getMonth() === today.getMonth()) {
-            activeTime = user.todaysTime;
-        }
-    }
+      const statusDate = new Date(user.lastStatusUpdate);
+      const today = new Date();
+      if (statusDate.getDate() === today.getDate() && statusDate.getMonth() === today.getMonth()) {
+          activeTime = user.todaysTime;
+      }
+  }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-32 font-sans selection:bg-blue-500/30">
+    <div className="min-h-screen p-6 pb-32">
       
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-blue-900/20 blur-[100px] rounded-full pointer-events-none"></div>
-
-      {/* --- NAVBAR --- */}
-      <div className="relative z-10 flex items-center justify-between max-w-4xl mx-auto py-6 mb-8">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <span className="text-3xl">🚇</span> 
-          <span>My Metro <span className="text-blue-500">Mates</span></span>
-        </h1>
-        {/* User Pill */}
-        <div className="bg-white/10 p-1 sm:pr-4 rounded-full flex items-center gap-3 border border-white/5">
-            {/* Added 'flex' to the wrapper to ensure the button sits tight */}
-            <div className="scale-75 flex">
-                <UserButton/>
-            </div>
-            <span className="text-sm font-medium hidden sm:block">{user.firstName}</span>
-        </div>
+      {/* --- HEADER --- */}
+      <div className="flex justify-between items-end mb-10 relative px-2">
+         <div className="-rotate-1">
+            <p className="font-kalam text-xl text-slate-500 mb-0 transform -rotate-2">Hello there,</p>
+            {/* BIG BOLD NAME */}
+            <h1 className="text-6xl font-outfit font-black text-slate-900 leading-none tracking-tight highlight-yellow inline-block px-3 py-1">
+                {user.firstName}
+            </h1>
+         </div>
+         <div className="p-1.5 bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] rotate-2 hover:rotate-0 transition-transform">
+            <UserButton />
+         </div>
       </div>
 
-      {/* --- MAIN CONTENT --- */}
-      <div className="relative z-10 max-w-4xl mx-auto grid gap-6 md:grid-cols-2">
+      <div className="space-y-10 max-w-md mx-auto">
         
-        {/* CARD 1: My Travel Profile */}
-        <div className="bg-gray-900/60 border border-gray-800 p-6 rounded-3xl backdrop-blur-md">
-            <div className="flex items-start justify-between mb-6">
-                <div>
-                    <h2 className="text-gray-400 text-sm uppercase tracking-wider font-semibold">My Route</h2>
-                    {/* REPLACED STATIC TIME WITH WIDGET 👇 */}
-                    <div className="mt-1">
-                        <StatusWidget 
-                            currentStatus={activeTime} 
-                            defaultTime={user.startTime} 
-                        />
-                    </div>
-                </div>
-                {/* Edit Button */}
-                <Link href="/onboarding">
-                    <button className="text-xs bg-gray-800 hover:bg-gray-700 cursor-pointer px-3 py-1 rounded-full text-gray-300 transition-colors">
-                        Edit ✎
-                    </button>
+        {/* 1. THE MAIN PASS */}
+        <div className="paper-card p-8 relative rotate-1 bg-white group">
+            <div className="tape"></div>
+
+            <div className="flex justify-between items-start mb-8 mt-2">
+                <span className="font-kalam text-2xl text-slate-900 border-b-2 border-slate-900 border-dashed pb-1">
+                    Student Pass
+                </span>
+                <Link href="/onboarding" className="font-outfit text-sm font-bold bg-slate-100 hover:bg-yellow-200 cursor-pointer px-3 py-1 rounded-full border border-slate-300 transition-colors">
+                    Edit ✎
                 </Link>
             </div>
 
-            <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
-                    <div>
-                        <p className="text-xs text-gray-500">Home Station</p>
-                        <p className="font-medium text-lg">{user.homeStation}</p>
-                    </div>
-                </div>
-                
-                {/* The Connector Line */}
-                <div className="h-8 w-0.5 bg-gradient-to-b from-blue-500 to-pink-500 ml-1 opacity-30"></div>
+            {/* Route */}
+           {/* ... inside app/dashboard/page.tsx ... */}
 
-                <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_10px_rgba(236,72,153,0.8)]"></div>
-                    <div>
-                        <p className="text-xs text-gray-500">College Station</p>
-                        <p className="font-medium text-lg">{user.collegeStation}</p>
+        {/* Route */}
+            <div className="flex gap-5 items-stretch">
+                <div className="flex flex-col items-center pt-2">
+                    <div className="w-5 h-5 rounded-full border-[3px] border-slate-900 bg-white"></div>
+                    <div className="w-1.5 flex-1 border-l-[3px] border-slate-900 border-dashed my-1"></div>
+                    <div className="w-5 h-5 rounded-full border-[3px] border-slate-900 bg-slate-900"></div>
+                </div>
+
+                <div className="flex flex-col gap-10 w-full py-1">
+                    
+                    {/* BOARDING STATION */}
+                   {/* ... inside the Route section ... */}
+                    <div className="rotate-[-1deg]">
+                        <p className="font-kalam text-lg text-slate-500 mb-1">Boarding From</p>
+                        {/* FORCE THE FONT HERE 👇 */}
+                        <p className={`${outfit.className} text-4xl font-black text-slate-900 leading-none tracking-tight`}>
+                            {user.homeStation}
+                        </p>
+                    </div>
+
+                    {/* DROP OFF STATION */}
+                    <div className="rotate-1">
+                        <p className="font-kalam text-lg text-slate-500 mb-1">Going To</p>
+                        {/* UPDATED FONT CLASSES 👇 */}
+                        <p className={`${outfit.className} text-4xl font-black text-slate-900 leading-none tracking-tight`}>
+                            {user.collegeStation}
+                        </p>
                     </div>
                 </div>
             </div>
-            {/* --- BIO WIDGET (Editable) --- */}
-        <BioWidget initialBio={user.bio || ""} />
         </div>
 
-        {/* CARD 2: Stats & Action */}
-        <div className="flex flex-col gap-6">
+        {/* 2. STATUS STICKY NOTE */}
+        <div className="bg-[#fff9c4] p-6 shadow-sm border border-black/5 -rotate-1 relative">
+            <div className="absolute -top-3 left-1/2 w-3 h-3 rounded-full bg-red-500 border border-black shadow-sm"></div>
+
+            <div className="flex justify-between items-center mb-2">
+                <p className="font-kalam text-2xl font-bold text-slate-800">My Schedule</p>
+                <div className={`font-mono font-bold text-xs border-2 border-black px-2 py-0.5 ${activeTime ? 'bg-green-400 text-black' : 'bg-white text-slate-400'}`}>
+                    {activeTime ? "LIVE" : "OFF"}
+                </div>
+            </div>
             
-            {/* Status Card */}
-            <div className="flex-1 bg-gradient-to-br from-blue-900/40 to-purple-900/40 border border-white/10 p-6 rounded-3xl flex flex-col justify-center items-center text-center">
-                <div className="text-5xl mb-2">👋</div>
-                <h3 className="text-xl font-bold">You are ready!</h3>
-                <p className="text-gray-400 text-sm mt-1 max-w-xs">
-                    Your profile is visible to other students travelling through your route.
-                </p>
-            </div>
-
-            {/* THE BIG BUTTON */}
-            <Link href="/search" className="group">
-                <button className="w-full bg-white text-black text-xl font-bold py-6 rounded-3xl shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-transform group-hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-3">
-                    <span>🔍</span> Find Travel Partners
-                </button>
-            </Link>
-
-            <InstallPrompt />
-
-            {/* Footer Info */}
-            <div className="text-center mt-12 pb-8">
-                <Link href="/about" className="inline-block group">
-                    <p className="text-zinc-600 text-xs font-medium mb-1 group-hover:text-zinc-400 transition-colors">
-                        Designed & Built by <span className="text-zinc-300 underline decoration-zinc-700 group-hover:decoration-blue-500">Bhuwan Chugh</span>
-                    </p>
-                    <p className="text-[10px] text-zinc-700 font-mono">
-                        v1.0 • IP University
-                    </p>
-                </Link>
-            </div>
-
+            <StatusWidget 
+                currentStatus={activeTime} 
+                defaultTime={user.startTime} 
+            />
         </div>
-      </div>
 
+        {/* 3. BIO */}
+        <div className="border-l-[6px] border-slate-900 pl-4 py-2 bg-slate-50 rotate-1">
+           <BioWidget initialBio={user.bio || ""} />
+        </div>
+
+        {/* 4. ACTION BUTTON */}
+        <Link href="/search" className="block group pt-4">
+            <button className="btn-sketch w-full h-20 flex items-center justify-center gap-3 text-2xl font-black shadow-lg cursor-pointer">
+                <span>Find Mates</span>
+                <span className="text-3xl">➜</span>
+            </button>
+        </Link>
+
+        <InstallPrompt />
+        
+        <div className="text-center pt-8 pb-4">
+             <Link href="/about" className="inline-block hover:scale-105 transition-transform">
+                <div className="font-kalam text-slate-500 text-xl border-b border-dashed border-slate-400 hover:text-black hover:border-black">
+                    📝 Publisher
+                </div>
+             </Link>
+             <p className="font-mono text-[10px] text-slate-300 mt-4 uppercase">v1.0 • Built for IPU</p>
+        </div>
+
+      </div>
     </div>
   );
 }

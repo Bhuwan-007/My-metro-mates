@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import RefreshButton from "@/components/RefreshButton";
+import RefreshButton from "@/components/RefreshButton"; 
 
 export default function FilterBar() {
   const router = useRouter();
@@ -9,7 +9,7 @@ export default function FilterBar() {
 
   const timeFilter = searchParams.get("time") === "true";
   const genderFilter = searchParams.get("gender") || "all";
-  const modeFilter = searchParams.get("mode") || "college"; // Default to college
+  const modeFilter = searchParams.get("mode") || "college"; 
 
   const updateFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -24,63 +24,70 @@ export default function FilterBar() {
   return (
     <div className="flex flex-col gap-4">
         
-        {/* --- 1. THE BIG MODE SWITCHER --- */}
-        <div className="grid grid-cols-2 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+        {/* 1. PRIMARY MODE SWITCHER (Torn Paper Tabs) */}
+        <div className="flex gap-2">
             <button
                 onClick={() => updateFilter("mode", "college")}
-                className={`py-3 rounded-lg hover:cursor-pointer text-sm font-bold transition-all flex flex-col items-center justify-center gap-1 ${
+                className={`flex-1 py-3 font-hand text-xl font-bold border-2 border-slate-900 transition-all ${
                     modeFilter === "college" 
-                    ? "bg-zinc-800 text-white shadow-lg" 
-                    : "text-zinc-500 hover:text-zinc-300"
+                    ? "bg-[#fff59d] -translate-y-1 shadow-[4px_4px_0px_#000]" 
+                    : "bg-white text-slate-400 hover:bg-slate-50 cursor-pointer"
                 }`}
             >
-                <span>🎓 Same College</span>
-                <span className="text-[10px] font-normal opacity-60">Direct Match</span>
+                🎓 Same College
             </button>
 
             <button
                 onClick={() => updateFilter("mode", "route")}
-                className={`py-3 rounded-lg hover:cursor-pointer text-sm font-bold transition-all flex flex-col items-center justify-center gap-1 ${
+                className={`flex-1 py-3 font-hand text-xl font-bold border-2 border-slate-900 transition-all ${
                     modeFilter === "route" 
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" 
-                    : "text-zinc-500 hover:text-zinc-300"
+                    ? "bg-[#b3e5fc] -translate-y-1 shadow-[4px_4px_0px_#000]" 
+                    : "bg-white text-slate-400 hover:bg-slate-50 cursor-pointer"
                 }`}
             >
-                <span>🚇 Route Match</span>
-                <span className="text-[10px] font-normal opacity-80">Inter-College</span>
+                🚇 Route Match
             </button>
         </div>
 
-        {/* --- 2. FINE TUNING (Gender/Time) --- */}
-        <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
-                <span className="text-xs font-bold text-zinc-600 uppercase tracking-wider">Filters:</span>
+        {/* 2. FILTERS ROW */}
+        <div className="flex items-center justify-between gap-2 bg-white border-2 border-slate-900 p-2 shadow-sm rotate-1">
+            
+            {/* Scrollable Filters Area */}
+            <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar flex-1">
+                <span className="font-hand text-lg font-bold text-slate-900">Filters:</span>
                 
+                {/* Time Filter (Checkbox Style) */}
                 <button 
                     onClick={() => updateFilter("time", timeFilter ? "false" : "true")}
-                    className={`px-4 hover:cursor-pointer py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap flex items-center gap-2 ${
+                    className={`cursor-pointer px-3 py-1 font-hand text-lg font-bold border-2 border-slate-900 flex items-center gap-2 whitespace-nowrap transition-colors ${
                         timeFilter 
-                        ? "bg-blue-500/10 border-blue-500 text-blue-400" 
-                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white"
+                        ? "bg-slate-900 text-white" 
+                        : "bg-transparent text-slate-500 hover:bg-slate-100 "
                     }`}
                 >
-                    <span>⏰</span> Match My Time
+                    <span>{timeFilter ? "☑" : "☐"}</span> Match Time
                 </button>
 
-                <select 
-                    value={genderFilter}
-                    onChange={(e) => updateFilter("gender", e.target.value)}
-                    className="bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs font-bold px-4 py-2 rounded-full outline-none focus:border-blue-500 appearance-none cursor-pointer hover:text-white"
-                >
-                    <option value="all">All Genders</option>
-                    <option value="male">Male Only</option>
-                    <option value="female">Female Only</option>
-                </select>
+                {/* Gender Select (Paper Dropdown) */}
+                <div className="relative border-2 border-slate-900 bg-white">
+                    <select 
+                        value={genderFilter}
+                        onChange={(e) => updateFilter("gender", e.target.value)}
+                        className="font-hand text-lg font-bold px-4 py-1 bg-transparent outline-none appearance-none cursor-pointer w-full pr-8"
+                    >
+                        <option value="all">All Genders</option>
+                        <option value="male">Male Only</option>
+                        <option value="female">Female Only</option>
+                    </select>
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-xs">▼</span>
+                </div>
             </div>
 
-            <div className="pl-2 border-l border-zinc-800 shrink-0">
+            {/* Refresh Button (Pinned Right) */}
+            <div className="pl-2 border-l-2 border-slate-200 shrink-0 cursor-pointer">
                 <RefreshButton />
             </div>
+
         </div>
     </div>
   );

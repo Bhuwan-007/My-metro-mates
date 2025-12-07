@@ -18,7 +18,7 @@ export default function RefreshButton() {
   return (
     <button 
       onClick={handleRefresh}
-      className="p-2 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all active:scale-90"
+      className=" cursor-pointer p-2 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all active:scale-90"
       title="Refresh Data"
     >
       <svg 
