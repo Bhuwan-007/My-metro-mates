@@ -73,7 +73,7 @@ export default function BioWidget({ initialBio }: { initialBio: string }) {
                     
                     <button 
                         onClick={() => setIsEditing(true)} 
-                        className="w-8 h-8 rounded-full border-2 border-slate-900 bg-white hover:bg-yellow-500 flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000] active:translate-y-px active:shadow-none cursor-pointer"
+                        className="w-8 h-8 rounded-full border-2 border-slate-900 bg-white hover:bg-yellow-500 flex items-center justify-center transition-colors shadow-[2px_2px_0px_#000] active:translate-y-px active:shadow-none cursor-pointer text-black"
                     >
                         ✎
                     </button>

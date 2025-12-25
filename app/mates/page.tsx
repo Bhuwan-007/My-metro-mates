@@ -32,7 +32,7 @@ export default async function MatesPage() {
         {/* --- SECTION 1: INCOMING REQUESTS --- */}
         <div>
             <div className="flex items-center justify-between mb-4 px-2">
-                <h2 className="font-hand text-2xl font-bold text-slate-500">
+                <h2 className="font-hand text-2xl font-bold text-black highlight-yellow inline-block">
                     Sticky Notes ({requests.length})
                 </h2>
                 <RefreshButton />
@@ -74,7 +74,7 @@ export default async function MatesPage() {
 
             {friends.length === 0 ? (
                 <div className="text-center py-8">
-                    <p className="font-hand text-xl text-slate-500">Page is empty!</p>
+                    <p className="font-hand text-xl text-black">Page is empty!</p>
                     <Link href="/search" className="underline font-bold text-blue-500">Go find people</Link>
                 </div>
             ) : (
@@ -101,10 +101,10 @@ export default async function MatesPage() {
                                 </div>
                                 
                                 <div className="flex-1">
-                                    <h3 className="font-hand text-2xl font-bold text-slate-900 leading-none">{friend.firstName}</h3>
+                                    <h3 className="font-kalam text-2xl font-bold text-slate-900 leading-none">{friend.firstName}</h3>
                                     <div className="flex items-center gap-2 mt-1">
-                                        <span className="font-mono text-xs bg-slate-100 px-1 rounded border border-slate-300">{friend.homeStation}</span>
-                                        <span className={`font-mono text-xs px-1 rounded border border-black ${isLive ? 'bg-green-300 font-bold' : 'bg-white'}`}>
+                                        <span className="font-mono text-xs bg-slate-100 px-1 rounded border border-slate-300 text-slate-700">{friend.homeStation}</span>
+                                        <span className={`text-slate-700 font-mono text-xs px-1 rounded border border-black ${isLive ? 'bg-green-300 font-bold ' : 'bg-white'}`}>
                                             {displayTime}
                                         </span>
                                     </div>

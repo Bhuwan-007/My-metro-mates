@@ -99,7 +99,7 @@ export default function StatusWidget({ currentStatus, defaultTime }: { currentSt
                     )}
                     <button 
                         onClick={() => setIsEditing(true)} 
-                        className="w-10 h-10 rounded-full bg-slate-900 text-white hover:bg-slate-700 flex items-center justify-center shadow-[2px_2px_0px_#000] active:translate-y-px active:shadow-none transition-all"
+                        className="w-10 h-10 rounded-full bg-slate-900 text-white hover:bg-yellow-400 flex items-center justify-center shadow-[2px_2px_0px_#000] active:translate-y-px active:shadow-none transition-all cursor-pointer"
                     >
                         ✎
                     </button>

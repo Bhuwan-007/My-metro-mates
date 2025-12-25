@@ -30,9 +30,9 @@ export default async function DashboardPage() {
       {/* --- HEADER --- */}
       <div className="flex justify-between items-end mb-10 relative px-2">
          <div className="-rotate-1">
-            <p className="font-kalam text-xl text-slate-500 mb-0 transform -rotate-2">Hello there,</p>
+            <p className="font-kalam text-xl text-black mb-0 transform -rotate-2">Hello there,</p>
             {/* BIG BOLD NAME */}
-            <h1 className="text-6xl font-outfit font-black text-slate-900 leading-none tracking-tight highlight-yellow inline-block px-3 py-1">
+            <h1 className="text-6xl font-kalam font-black text-slate-900 leading-none tracking-tight highlight-yellow inline-block px-3 py-1">
                 {user.firstName}
             </h1>
          </div>
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
                 <span className="font-kalam text-2xl text-slate-900 border-b-2 border-slate-900 border-dashed pb-1">
                     Student Pass
                 </span>
-                <Link href="/onboarding" className="font-outfit text-sm font-bold bg-slate-100 hover:bg-yellow-200 cursor-pointer px-3 py-1 rounded-full border border-slate-300 transition-colors">
+                <Link href="/onboarding" className="font-outfit text-sm text-black font-bold bg-slate-100 hover:bg-yellow-200 cursor-pointer px-3 py-1 rounded-full border border-slate-300 transition-colors">
                     Edit ✎
                 </Link>
             </div>
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
                     
                     {/* BOARDING STATION */}
                    {/* ... inside the Route section ... */}
-                    <div className="rotate-[-1deg]">
+                    <div className="-rotate-1">
                         <p className="font-kalam text-lg text-slate-500 mb-1">Boarding From</p>
                         {/* FORCE THE FONT HERE 👇 */}
                         <p className={`${outfit.className} text-4xl font-black text-slate-900 leading-none tracking-tight`}>
@@ -125,11 +125,11 @@ export default async function DashboardPage() {
         
         <div className="text-center pt-8 pb-4">
              <Link href="/about" className="inline-block hover:scale-105 transition-transform">
-                <div className="font-kalam text-slate-500 text-xl border-b border-dashed border-slate-400 hover:text-black hover:border-black">
+                <div className="font-kalam text-violet-800 text-xl border-b border-dashed border-slate-400 hover:text-black hover:border-black">
                     📝 Publisher
                 </div>
              </Link>
-             <p className="font-mono text-[10px] text-slate-300 mt-4 uppercase">v1.0 • Built for IPU</p>
+             <p className="font-mono text-[10px] text-slate-300 mt-4 uppercase">v1.0• </p>
         </div>
 
       </div>

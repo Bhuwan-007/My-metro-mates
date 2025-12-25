@@ -40,7 +40,7 @@ export default async function Home() {
           <div className="paper-card p-6 rotate-1 bg-white max-w-xs mx-auto">
              <div className="tape"></div>
              
-             <p className="font-hand text-xl font-bold mb-4 mt-2">Join the Club:</p>
+             <p className="text-violet-400 font-hand text-xl font-bold mb-4 mt-2">Join the Club:</p>
 
              <SignInButton mode="modal">
                 <button className="btn-sketch w-full py-4 font-bold text-lg mb-3 shadow-md">
@@ -59,7 +59,7 @@ export default async function Home() {
       </div>
       
       <div className="absolute bottom-4 font-hand text-slate-400 text-xs">
-        Made for IPU Students ✏️
+        Made for Networking ✏️
       </div>
     </div>
   );

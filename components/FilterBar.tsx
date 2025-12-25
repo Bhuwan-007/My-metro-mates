@@ -30,7 +30,7 @@ export default function FilterBar() {
                 onClick={() => updateFilter("mode", "college")}
                 className={`flex-1 py-3 font-hand text-xl font-bold border-2 border-slate-900 transition-all ${
                     modeFilter === "college" 
-                    ? "bg-[#fff59d] -translate-y-1 shadow-[4px_4px_0px_#000]" 
+                    ? "bg-[#ee781e] -translate-y-1 shadow-[4px_4px_0px_#000]" 
                     : "bg-white text-slate-400 hover:bg-slate-50 cursor-pointer"
                 }`}
             >
@@ -69,11 +69,11 @@ export default function FilterBar() {
                 </button>
 
                 {/* Gender Select (Paper Dropdown) */}
-                <div className="relative border-2 border-slate-900 bg-white">
+                <div className="relative border-2 border-black bg-white">
                     <select 
                         value={genderFilter}
                         onChange={(e) => updateFilter("gender", e.target.value)}
-                        className="font-hand text-lg font-bold px-4 py-1 bg-transparent outline-none appearance-none cursor-pointer w-full pr-8"
+                        className="font-hand text-lg text-black font-bold px-4 py-1 bg-transparent outline-none appearance-none cursor-pointer w-full pr-8"
                     >
                         <option value="all">All Genders</option>
                         <option value="male">Male Only</option>

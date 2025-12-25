@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import ConnectButton from "@/components/ConnectButton";
 import FilterBar from "@/components/FilterBar";
-import BottomNav from "@/components/BottomNav"; // Ensure Nav is here if not in layout
 
 export default async function SearchPage({ 
   searchParams 
@@ -31,15 +30,15 @@ export default async function SearchPage({
     <div className="min-h-screen p-6 pb-32 font-sans overflow-x-hidden">
       
       {/* --- HANDWRITTEN HEADER --- */}
-      <div className="relative mb-8 text-center rotate-[-1deg]">
+      <div className="relative mb-8 text-center -rotate-1">
         <div className="inline-block relative">
             <h1 className="font-hand text-5xl font-bold text-slate-900 relative z-10">
                 Find Travelers
             </h1>
             {/* Highlighter effect behind text */}
-            <div className="absolute bottom-2 left-0 w-full h-4 bg-[#b3e5fc] -z-0 transform -rotate-2"></div>
+            <div className="absolute bottom-2 left-0 w-full h-4 bg-[#b3e5fc] z-0 transform -rotate-2"></div>
         </div>
-        <p className="font-hand text-xl text-slate-500 mt-1">
+        <p className="font-hand text-xl text-black mt-1">
             Going to <span className="font-bold underline decoration-wavy decoration-orange-400">{user.collegeStation}</span>
         </p>
       </div>
@@ -51,7 +50,7 @@ export default async function SearchPage({
       
       {/* --- UNVERIFIED WARNING (Ripped Paper) --- */}
       {!isVerified && (
-          <div className="mb-8 mx-auto max-w-sm bg-red-50 border-2 border-red-800 border-dashed p-4 rotate-[-1deg] shadow-sm relative">
+          <div className="mb-8 mx-auto max-w-sm bg-red-50 border-2 border-red-800 border-dashed p-4 -rotate-1 shadow-sm relative">
              <div className="absolute -top-3 -left-3 w-8 h-8 bg-red-500 rounded-full border-2 border-black flex items-center justify-center text-white font-bold">!</div>
              <p className="font-hand text-xl font-bold text-red-800">Guest Mode</p>
              <p className="text-sm font-sans mb-3">You can see people, but you can't connect until you verify your ID.</p>
@@ -109,7 +108,7 @@ export default async function SearchPage({
 
                     {/* Time Stamp (Looks like a stamp) */}
                     <div className={`text-right ${!isVerified ? "blur-sm opacity-50 select-none" : ""}`}>
-                        <div className={`border-2 border-slate-900 px-2 py-1 rounded-lg transform rotate-[-3deg] ${isLive ? "bg-green-100" : "bg-slate-100"}`}>
+                        <div className={`border-2 border-slate-900 px-2 py-1 rounded-lg transform -rotate-3 ${isLive ? "bg-green-100" : "bg-slate-100"}`}>
                             <span className="font-mono text-sm font-bold text-slate-900">{displayTime}</span>
                         </div>
                         {isLive && <p className="font-hand text-xs text-green-600 font-bold mt-1">Live!</p>}
