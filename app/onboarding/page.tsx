@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { createUser } from "@/actions/user.actions";
 import { redirect } from "next/navigation";
 import OnboardingForm from "@/components/OnboardingForm"; // You keep your existing logic component
