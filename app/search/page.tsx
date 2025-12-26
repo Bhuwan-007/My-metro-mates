@@ -27,13 +27,13 @@ export default async function SearchPage({
   const isVerified = user.isVerified;
 
   return (
-    <div className="min-h-screen p-6 pb-32 font-sans overflow-x-hidden transition-colors duration-300">
+    <div className="min-h-screen p-6 pb-32 font-sans overflow-x-hidden bg-(--bg-paper) transition-colors duration-300">
       
       {/* --- HEADER --- */}
       <div className="relative mb-8 text-center -rotate-1">
         <div className="inline-block relative">
             {/* Dark Mode: Text becomes White */}
-            <h1 className="font-kalam text-5xl font-bold text-slate-900 relative z-10 drop-shadow-sm transition-colors">
+            <h1 className="font-kalam text-5xl font-bold  relative z-10 drop-shadow-sm transition-colors">
                 Find Travelers
             </h1>
             {/* Highlighter: Blue -> Dark Blue */}
@@ -93,7 +93,7 @@ export default async function SearchPage({
                 {/* Tape: Adjusted transparency for dark mode */}
                 <div className="tape dark:bg-white/10 dark:border-white/20"></div>
 
-                <div className="flex items-start justify-between mb-4 mt-2">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 mt-2 gap-3">
                     <div className="flex items-center gap-3">
                         <img src={match.imageUrl} className="w-14 h-14 rounded-full border-2 border-slate-900 dark:border-slate-500 object-cover bg-slate-100" />
                         <div>
@@ -109,7 +109,7 @@ export default async function SearchPage({
                     </div>
 
                     {/* --- TIME STAMP --- */}
-                    <div className="text-right">
+                    <div className="self-end sm:self-auto text-right shrink-0 w-fit ml-auto">
                         {isVerified && displayTime ? (
                             <>
                                 {/* Time Box: Slate-100 -> Slate-700 */}

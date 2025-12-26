@@ -25,14 +25,14 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 pb-32">
+    <div className="min-h-screen p-6 pb-32 bg-(--bg-paper)">
       
       {/* --- HEADER --- */}
       <div className="flex justify-between items-end mb-10 relative px-2">
          <div className="-rotate-1">
-            <p className="font-kalam text-xl text-black mb-0 transform -rotate-2">Hello there,</p>
+            <p className="font-kalam text-xl  mb-0 transform -rotate-2">Hello there,</p>
             {/* BIG BOLD NAME */}
-            <h1 className="text-6xl font-kalam font-black text-slate-900 leading-none tracking-tight underline-sketch inline-block px-3 py-1">
+            <h1 className="text-6xl font-kalam font-black  leading-none tracking-tight underline-sketch inline-block px-3 py-1">
                 {user.firstName}
             </h1>
          </div>
