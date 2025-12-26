@@ -14,7 +14,7 @@ export default function BottomNav({ userEmail }: { userEmail: string }) {
         
         <NavItem href="/dashboard" active={isActive('/dashboard')} label="Home" emoji="🏠" />
         <NavItem href="/search" active={isActive('/search')} label="Find" emoji="🔍" />
-        <NavItem href="/mates" active={isActive('/mates')} label="Mates" emoji="👯‍♂️" />
+        <NavItem href="/mates" active={isActive('/mates')} label="Mates" emoji="🤝" />
         <NavItem href="/onboarding" active={isActive('/onboarding')} label="You" emoji="👤" />
         {isAdmin && <NavItem href="/admin" active={isActive('/admin')} label="Admin" emoji="🛡️" danger />}
 

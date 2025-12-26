@@ -14,11 +14,11 @@ export default async function MatesPage() {
   const { requests, friends } = await getMyMates(user.clerkId);
 
   return (
-    <div className="min-h-screen p-6 pb-32 font-sans overflow-x-hidden">
+    <div className="min-h-screen p-6 pb-32 font-sans overflow-x-hidden bg-(--bg-paper)">
       
       {/* Header */}
       <div className="mb-10 text-center">
-        <h1 className="font-hand text-5xl font-bold text-slate-900 inline-block relative underline-sketch px-4">
+        <h1 className="font-hand text-5xl font-bold inline-block relative underline-sketch px-4">
            My Scrapbook
            {/* Underline Scribble */}
            <svg className="absolute w-full h-3 -bottom-2 left-0 text-yellow-300" viewBox="0 0 100 10" preserveAspectRatio="none">
@@ -32,14 +32,14 @@ export default async function MatesPage() {
         {/* --- SECTION 1: INCOMING REQUESTS --- */}
         <div>
             <div className="flex items-center justify-between mb-4 px-2">
-                <h2 className="font-hand text-2xl font-bold text-black highlight-yellow inline-block">
+                <h2 className="font-hand text-2xl font-bold  underline-sketch inline-block">
                     Sticky Notes ({requests.length})
                 </h2>
                 <RefreshButton />
             </div>
 
             {requests.length === 0 ? (
-                <div className="border-2 border-dashed border-slate-300 p-6 rounded-lg text-center text-slate-400 font-hand text-lg rotate-1">
+                <div className="border-2 border-dashed border-slate-300 p-6 rounded-lg text-center  font-hand text-lg rotate-1">
                     No new notes...
                 </div>
             ) : (
@@ -53,7 +53,7 @@ export default async function MatesPage() {
                                 <img src={req.imageUrl} className="w-10 h-10 rounded-full border border-black grayscale contrast-125" />
                                 <div>
                                     <h3 className="font-hand text-xl font-bold leading-none">{req.firstName} {req.lastName}</h3>
-                                    <p className="font-mono text-[10px] text-slate-500">Wants to connect</p>
+                                    <p className="font-mono text-[10px] ">Wants to connect</p>
                                 </div>
                             </div>
                             
@@ -68,13 +68,13 @@ export default async function MatesPage() {
 
         {/* --- SECTION 2: MY SQUAD --- */}
         <div>
-            <h2 className="font-hand text-2xl font-bold text-slate-900 mb-6 px-2 highlight-blue inline-block">
+            <h2 className="font-hand text-2xl font-bold  mb-6 px-2 underline-sketch inline-block">
                 My Squad ({friends.length})
             </h2>
 
             {friends.length === 0 ? (
                 <div className="text-center py-8">
-                    <p className="font-hand text-xl text-black">Page is empty!</p>
+                    <p className="font-hand text-xl ">Page is empty!</p>
                     <Link href="/search" className="underline font-bold text-blue-500">Go find people</Link>
                 </div>
             ) : (
@@ -101,7 +101,7 @@ export default async function MatesPage() {
                                 </div>
                                 
                                 <div className="flex-1">
-                                    <h3 className="font-kalam text-2xl font-bold text-slate-900 leading-none">{friend.firstName}</h3>
+                                    <h3 className="font-kalam text-2xl font-bold  leading-none">{friend.firstName}</h3>
                                     <div className="flex items-center gap-2 mt-1">
                                         <span className="font-mono text-xs bg-slate-100 px-1 rounded border border-slate-300 text-slate-700">{friend.homeStation}</span>
                                         <span className={`text-slate-700 font-mono text-xs px-1 rounded border border-black ${isLive ? 'bg-green-300 font-bold ' : 'bg-white'}`}>

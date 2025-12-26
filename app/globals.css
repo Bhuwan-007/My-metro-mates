@@ -2,7 +2,7 @@
 
 :root {
   /* LIGHT MODE (Scrapbook) */
-  --bg-paper: #fdfbf7;       /* Cream Background */
+  --bg-paper: #ffffff;      
   --bg-card: #ffffff;        /* White Card */
   --text-main: #0f172a;      /* Dark Slate Ink */
   --text-muted: #64748b;     /* Gray Text */
@@ -14,7 +14,7 @@
 
 .dark {
   /* DARK MODE (Blueprint) */
-  --bg-paper: #0f172a;       /* Deep Navy Background */
+  --bg-paper: #000000;       /* Deep Navy Background */
   --bg-card: #1e293b;        /* Slate Blue Card */
   --text-main: #f8fafc;      /* Chalk White */
   --text-muted: #679ae1;     /* Light Gray Text */
