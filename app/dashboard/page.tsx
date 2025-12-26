@@ -32,7 +32,7 @@ export default async function DashboardPage() {
          <div className="-rotate-1">
             <p className="font-kalam text-xl  mb-0 transform -rotate-2">Hello there,</p>
             {/* BIG BOLD NAME */}
-            <h1 className="text-6xl font-kalam font-black  leading-none tracking-tight underline-sketch inline-block px-3 py-1">
+            <h1 className="text-4xl md:text-6xl font-kalam font-black leading-tight tracking-tight underline-sketch inline-block px-3 py-1 wrap-break-word max-w-full">
                 {user.firstName}
             </h1>
          </div>
