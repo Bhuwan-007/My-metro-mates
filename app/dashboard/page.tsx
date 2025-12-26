@@ -32,7 +32,7 @@ export default async function DashboardPage() {
          <div className="-rotate-1">
             <p className="font-kalam text-xl text-black mb-0 transform -rotate-2">Hello there,</p>
             {/* BIG BOLD NAME */}
-            <h1 className="text-6xl font-kalam font-black text-slate-900 leading-none tracking-tight highlight-yellow inline-block px-3 py-1">
+            <h1 className="text-6xl font-kalam font-black text-slate-900 leading-none tracking-tight underline-sketch inline-block px-3 py-1">
                 {user.firstName}
             </h1>
          </div>
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
             <div className="tape"></div>
 
             <div className="flex justify-between items-start mb-8 mt-2">
-                <span className="font-kalam text-2xl text-slate-900 border-b-2 border-slate-900 border-dashed pb-1">
+                <span className="font-kalam text-2xl text-slate-500 border-b-2 border-slate-900 border-dashed pb-1">
                     Student Pass
                 </span>
                 <Link href="/onboarding" className="font-outfit text-sm text-black font-bold bg-slate-100 hover:bg-yellow-200 cursor-pointer px-3 py-1 rounded-full border border-slate-300 transition-colors">
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
                     <div className="-rotate-1">
                         <p className="font-kalam text-lg text-slate-500 mb-1">Boarding From</p>
                         {/* FORCE THE FONT HERE 👇 */}
-                        <p className={`${outfit.className} text-4xl font-black text-slate-900 leading-none tracking-tight`}>
+                        <p className={`${outfit.className} text-4xl font-black  leading-none tracking-tight`}>
                             {user.homeStation}
                         </p>
                     </div>
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
                     <div className="rotate-1">
                         <p className="font-kalam text-lg text-slate-500 mb-1">Going To</p>
                         {/* UPDATED FONT CLASSES 👇 */}
-                        <p className={`${outfit.className} text-4xl font-black text-slate-900 leading-none tracking-tight`}>
+                        <p className={`${outfit.className} text-4xl font-black  leading-none tracking-tight`}>
                             {user.collegeStation}
                         </p>
                     </div>

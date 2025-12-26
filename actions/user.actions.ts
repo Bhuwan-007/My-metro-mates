@@ -47,18 +47,28 @@ export async function updateIdCard(imageUrl: string) {
     const clerkUser = await currentUser();
     if (!clerkUser) return { success: false };
 
+    // 1. Update the Database
     await UserModel.findOneAndUpdate(
       { clerkId: clerkUser.id },
       { 
         idCardUrl: imageUrl,
-        rejectionReason: "" // Clear rejection error on new upload
+        rejectionReason: "" // Clear any old rejection errors
       }
     );
-    redirect("/dashboard");
+
+    // 2. Clear the Cache (Critical step!)
+    revalidatePath("/verify-id");
+    revalidatePath("/dashboard");
+    
+    return { success: true };
+
   } catch (error) {
     console.log("Error updating ID Card:", error);
     return { success: false };
   }
+  
+  // ❌ NO REDIRECT HERE! 
+  // We let the frontend refresh the page so the user sees the "Pending" screen.
 }
 
 // --- 3. UPDATE PROFILE (Onboarding) ---
@@ -70,7 +80,7 @@ interface UpdateUserParams {
   bio: string;
   contactMethod: "whatsapp" | "instagram";
   contactValue: string;
-  gender: string; // <--- Added Gender here
+  gender: string;
 }
 
 export async function updateUser(params: UpdateUserParams) {
@@ -86,7 +96,7 @@ export async function updateUser(params: UpdateUserParams) {
         bio: params.bio,
         contactMethod: params.contactMethod,
         contactValue: params.contactValue,
-        gender: params.gender, // <--- Saving Gender
+        gender: params.gender,
         onboarded: true,
       },
       { new: true }
@@ -100,50 +110,53 @@ export async function updateUser(params: UpdateUserParams) {
   }
 }
 
-// --- 4. SEARCH MATCHES (The Algorithm) ---
+// --- 4. SEARCH MATCHES (The Algorithm + Security Gate) ---
 export async function getMatches(
     currentUserId: string, 
     filterTime?: boolean, 
     filterGender?: string,
-    filterMode?: string // <--- New Param
+    filterMode?: string
 ) {
   try {
     await connectDB();
 
+    // 1. Get Current User to check permissions
     const currentUser = await UserModel.findOne({ clerkId: currentUserId });
     if (!currentUser) return [];
 
-    // --- 1. BASE QUERY ---
+    const isViewerVerified = currentUser.isVerified; // <--- CHECK VERIFICATION STATUS
+
+    // 2. BASE QUERY
     let query: any = {
       clerkId: { $ne: currentUserId },
       onboarded: true,
-      isVerified: true,
+      isVerified: true, // Only show Verified users in results? (Optional: remove if you want to see unverified ppl too)
     };
 
     if (filterGender && filterGender !== "all") {
       query.gender = filterGender;
     }
 
-    // --- 2. MODE LOGIC ---
+    // 3. MODE LOGIC
     if (filterMode === "route") {
-        // ROUTE MATCHING: Fetch everyone (we filter by math later)
-        // No specific college filter here.
+        // ROUTE MATCHING: Fetch everyone (filtered by math later)
     } else {
         // COLLEGE MATCHING (Default): Must go to same station
         query.collegeStation = currentUser.collegeStation;
     }
 
-    // --- 3. FETCH DATA ---
-    // We need 'homeStation' and 'collegeStation' to calculate the route
+    // 4. FETCH DATA
     const matches = await UserModel.find(query).select("_id clerkId firstName lastName homeStation collegeStation startTime imageUrl bio contactMethod friends todaysTime lastStatusUpdate gender");
 
-    // --- 4. JS FILTERING (Time & Route Overlap) ---
+    // 5. JS FILTERING (Time & Route Overlap)
     const myHome = getStationData(currentUser.homeStation);
     const myCollege = getStationData(currentUser.collegeStation);
 
     let filteredMatches = matches.filter((match: any) => {
         
         // A. TIME FILTER
+        // (Note: Even if unverified, we CAN filter by time logic on the server, 
+        // we just won't SHOW the time to them on the client)
         if (filterTime) {
             const myTimeMinutes = convertToMinutes(getLiveTime(currentUser));
             const theirTimeStr = getLiveTime(match);
@@ -152,49 +165,63 @@ export async function getMatches(
             if (diff > 60) return false;
         }
 
-        // B. ROUTE OVERLAP FILTER (The Math 🧮)
+        // B. ROUTE OVERLAP FILTER
         if (filterMode === "route") {
             const theirHome = getStationData(match.homeStation);
             const theirCollege = getStationData(match.collegeStation);
 
-            // Safety: If station not found in our list, skip
             if (!myHome || !myCollege || !theirHome || !theirCollege) return false;
 
-            // Rule 1: Must be on the SAME LINE
+            // Rule 1: Same Line
             if (myHome.line !== theirHome.line) return false;
 
-            // Rule 2: Calculate Overlap
-            // Normalize Direction (Start is always smaller index)
+            // Rule 2: Overlap Calculation
             const myStart = Math.min(myHome.index, myCollege.index);
             const myEnd = Math.max(myHome.index, myCollege.index);
             const theirStart = Math.min(theirHome.index, theirCollege.index);
             const theirEnd = Math.max(theirHome.index, theirCollege.index);
 
-            // Find intersection
             const overlapStart = Math.max(myStart, theirStart);
             const overlapEnd = Math.min(myEnd, theirEnd);
             const overlapCount = overlapEnd - overlapStart;
 
-            // YOUR RULE: At least 4 stations overlap
             if (overlapCount < 4) return false;
         }
 
         return true;
     });
 
-    // --- 5. ADD STATUS FLAGS ---
+    // 6. ADD STATUS & SECURITY SANITIZATION 🔒
     const sentRequests = await RequestModel.find({ senderId: currentUserId, status: "pending" });
     const sentRequestIds = sentRequests.map((req) => req.receiverId);
     const incomingRequestIds = currentUser.friendRequests || [];
 
-    const matchesWithStatus = filteredMatches.map((match) => ({
-      ...match.toObject(), 
-      hasPendingRequest: sentRequestIds.includes(match.clerkId),
-      hasIncomingRequest: incomingRequestIds.includes(match.clerkId),
-      isFriend: currentUser.friends.includes(match.clerkId)
-    }));
+    const finalMatches = filteredMatches.map((match) => {
+      const matchObj = match.toObject();
 
-    return JSON.parse(JSON.stringify(matchesWithStatus));
+      // Check relationship
+      const isFriend = currentUser.friends.includes(match.clerkId);
+      
+      // SECURITY CHECK:
+      // If the viewer is NOT verified, we hide sensitive data (Times & Live Status)
+      // Exception: If they are already friends, we usually allow seeing it.
+      const canSeeData = isViewerVerified || isFriend;
+
+      return {
+        ...matchObj,
+        // If not verified, overwrite these fields with NULL
+        startTime: canSeeData ? matchObj.startTime : null,
+        todaysTime: canSeeData ? matchObj.todaysTime : null,
+        lastStatusUpdate: canSeeData ? matchObj.lastStatusUpdate : null,
+        
+        // Add flags
+        hasPendingRequest: sentRequestIds.includes(match.clerkId),
+        hasIncomingRequest: incomingRequestIds.includes(match.clerkId),
+        isFriend
+      };
+    });
+
+    return JSON.parse(JSON.stringify(finalMatches));
   } catch (error) {
     console.log("Error fetching matches:", error);
     return [];
@@ -208,12 +235,12 @@ export async function getMyMates(currentUserId: string) {
     const currentUser = await UserModel.findOne({ clerkId: currentUserId });
     if (!currentUser) return { requests: [], friends: [] };
 
-    // Pending Requests (With Contact Info for Verification)
+    // Pending Requests
     const requests = await UserModel.find({
       clerkId: { $in: currentUser.friendRequests }
     }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue");
 
-    // Friends (With Live Status)
+    // Friends (Always full access)
     const friends = await UserModel.find({
       clerkId: { $in: currentUser.friends }
     }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue bio todaysTime lastStatusUpdate");
@@ -250,7 +277,6 @@ function getLiveTime(user: any) {
 export async function getPendingUsers() {
   try {
     await connectDB();
-    // Find users who have an ID Card URL but are NOT verified yet
     const users = await UserModel.find({
       idCardUrl: { $exists: true, $ne: "" },
       isVerified: false,
@@ -267,20 +293,20 @@ export async function approveUser(clerkId: string) {
   try {
     await connectDB();
     await UserModel.findOneAndUpdate({ clerkId }, { isVerified: true });
-    revalidatePath("/admin"); // Refresh the admin list
+    revalidatePath("/admin"); 
     return { success: true };
   } catch (error) {
     return { success: false };
   }
 }
 
-// Reject a user (Reset them)
+// Reject a user
 export async function rejectUser(clerkId: string, reason: string) {
   try {
     await connectDB();
     await UserModel.findOneAndUpdate({ clerkId }, { 
-        idCardUrl: "", // Clear the image
-        rejectionReason: reason // Add the note
+        idCardUrl: "", 
+        rejectionReason: reason 
     });
     revalidatePath("/admin");
     return { success: true };
@@ -289,9 +315,7 @@ export async function rejectUser(clerkId: string, reason: string) {
   }
 }
 
-// ... existing imports
-
-// NEW ACTION: Update Bio Only
+// Update Bio Only
 export async function updateBio(bio: string) {
   try {
     await connectDB();

@@ -16,8 +16,8 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
       
       {/* Background doodles */}
-      <div className="absolute top-10 left-[-20px] text-9xl opacity-10 rotate-12">🚇</div>
-      <div className="absolute bottom-20 right-[-20px] text-9xl opacity-10 rotate-[-12]">🎒</div>
+      <div className="absolute top-10 -left-5 text-9xl opacity-10 rotate-12">🚇</div>
+      <div className="absolute bottom-20 -right-5 text-9xl opacity-10 rotate-[-12]">🎒</div>
 
       <div className="relative z-10 w-full max-w-md text-center">
         
@@ -37,19 +37,19 @@ export default async function Home() {
 
         {/* Paper Card Login */}
         <SignedOut>
-          <div className="paper-card p-6 rotate-1 bg-white max-w-xs mx-auto">
+          <div className="paper-card p-6 rotate-1 max-w-xs mx-auto">
              <div className="tape"></div>
              
              <p className="text-violet-400 font-hand text-xl font-bold mb-4 mt-2">Join the Club:</p>
 
              <SignInButton mode="modal">
-                <button className="btn-sketch w-full py-4 font-bold text-lg mb-3 shadow-md">
+                <button className="btn-sketch w-full py-4 font-bold text-lg mb-3 shadow-md hover:text-white">
                   Log in with Email
                 </button>
              </SignInButton>
              
              <SignInButton mode="modal" forceRedirectUrl="/verify-id">
-                <button className="text-xs font-mono underline text-slate-500 hover:text-black">
+                <button className="text-xs font-mono underline text-slate-500 hover:text-blue-300">
                   No College Email? Verify here.
                 </button>
              </SignInButton>

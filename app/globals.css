@@ -9,6 +9,7 @@
   --border: #0f172a;         /* Dark Borders */
   --highlight: #fff59d;      /* Yellow Highlighter */
   --tape: rgba(255, 255, 255, 0.6);
+  --pen-color: #ea580c;
 }
 
 .dark {
@@ -20,6 +21,7 @@
   --border: #f8fafc;         /* White Borders */
   --highlight: #dbb156;      /* Dark Gold */
   --tape: rgba(7, 6, 6, 0.1);
+  --pen-color: #fbbf24;
 }
 
 /* Base Transition for everything */
@@ -46,6 +48,15 @@ body::before {
 .font-kalam { font-family: var(--font-kalam), cursive; }
 .font-outfit { font-family: var(--font-outfit), sans-serif; }
 
+.paper-card {
+    background-color: var(--bg-card); /* <--- SWAPS AUTOMATICALLY */
+    color: var(--text-main);
+    border: 4px solid var(--border);
+    box-shadow: 8px 8px 0px var(--shadow);
+    border-radius: 1.5rem; /* rounded-3xl */
+    transition: all 0.3s ease;
+  }
+
 /* Tape Effect */
 .tape-strip {
   position: absolute;
@@ -61,6 +72,14 @@ body::before {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   z-index: 10;
 }
+
+.nav-card {
+    background-color: var(--bg-card); /* <--- SWAPS AUTOMATICALLY */
+    border: 2px solid var(--border);
+    box-shadow: 4px 4px 0px var(--shadow);
+    color: var(--text-main);
+    transition: all 0.3s ease;
+  }
 
 /* 2. Tape Effect (Looks like masking tape holding it up) */
 .tape {
@@ -93,6 +112,14 @@ body::before {
   background-position: 0 88%;
 }
 
+.underline-sketch {
+    text-decoration-color: aquamarine;
+    text-decoration-line: underline;
+    text-decoration-style: wavy;      /* Makes it zigzag/wavy */
+    text-decoration-thickness: 2px;   /* Chunky pen look */
+    text-underline-offset: 4px;       /* Pushes it down slightly */
+  }
+
 /* 4. Handwritten Button */
 .btn-sketch {
   background: #2d2a2e;
@@ -100,6 +127,11 @@ body::before {
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* Irregular circle */
   border: 2px solid #2d2a2e;
   transition: all 0.2s;
+}
+.dark .btn-sketch {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #f8fafc;
 }
 .btn-sketch:hover {
   background: transparent;
@@ -125,4 +157,15 @@ body::before {
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   border: 2px solid #2d2a2e;
   transition: all 0.2s;
+}
+
+@keyframes scribble {
+  0% { stroke-dashoffset: 300; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-scribble {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: scribble 2s ease-in-out infinite alternate;
 }

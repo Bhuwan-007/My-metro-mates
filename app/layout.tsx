@@ -3,13 +3,13 @@ import { Outfit, Kalam } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import { Toaster } from "sonner";
-import SecurityGate from "@/components/SecurityGate"; 
+// import SecurityGate from "@/components/SecurityGate"; // <--- REMOVED (Gate is now open)
 import { connectDB } from "@/lib/db";         
 import UserModel from "@/lib/models/User"; 
 import { currentUser } from "@clerk/nextjs/server";   
 import BottomNav from "@/components/BottomNav"; 
-import { ThemeProvider } from "next-themes"; // Import ThemeProvider
-import ThemeToggle from "@/components/ThemeToggle"; // <--- IMPORT THE TOGGLE
+import { ThemeProvider } from "next-themes"; 
+import ThemeToggle from "@/components/ThemeToggle"; 
 
 // Configure Fonts
 const outfit = Outfit({ 
@@ -38,27 +38,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await currentUser();
-  const allowedDomains = ["@std.ggsipu.ac.in", "@ipu.ac.in"]; 
-  let isAllowed = false;
-  let userEmail = "";
-  let showNav = false; 
-
-  if (user) {
-    userEmail = user.emailAddresses[0]?.emailAddress || "";
-    const isCollegeEmail = allowedDomains.some(domain => userEmail.endsWith(domain));
-    if (isCollegeEmail) {
-       isAllowed = true;
-       showNav = true;
-    } else {
-       await connectDB();
-       const dbUser = await UserModel.findOne({ clerkId: user.id });
-       if (dbUser && dbUser.isVerified) {
-          isAllowed = true;
-          showNav = true;
-       }
-    }
+  let user = null;
+  try {
+    user = await currentUser();
+  } catch (err) {
+    // If Clerk throws "Not Found", it means the session is stale.
+    // We just ignore it and treat the user as logged out.
+    console.log("User session invalid or user deleted.");
   }
+  
+  // We determine if we should show the Nav bar
+  // Logic: If they are logged in via Clerk, show the nav.
+  const showNav = !!user; 
+  const userEmail = user?.emailAddresses[0]?.emailAddress || "";
 
   return (
     <ClerkProvider>
@@ -72,16 +64,13 @@ export default async function RootLayout({
                <ThemeToggle />
             </div>
 
+            {/* Main Content Container */}
             <div className="relative z-10 max-w-md mx-auto min-h-screen border-x-2 border-dashed border-slate-200/60 dark:border-slate-700 bg-white/40 dark:bg-slate-900/50 backdrop-blur-[2px] shadow-2xl">
-              {user ? (
-                 <SecurityGate isAllowed={isAllowed} userEmail={userEmail}>
-                    {children}
-                 </SecurityGate>
-              ) : (
-                 children
-              )}
+              {/* 🔓 GATE OPEN: Everyone who logs in can see the pages */}
+              {children}
             </div>
             
+            {/* Show Nav for ALL logged-in users (Guest or Verified) */}
             {showNav && <BottomNav userEmail={userEmail} />}
             
             <Toaster position="top-center" richColors theme="light" />

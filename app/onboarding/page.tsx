@@ -16,7 +16,7 @@ export default async function OnboardingPage() {
         <div className="tape"></div>
 
         <div className="mb-8 text-center mt-4">
-            <h1 className="font-hand text-4xl font-bold text-slate-900 highlight-yellow inline-block px-4">
+            <h1 className="font-kalam text-4xl font-bold underline-sketch inline-block px-4">
                 Student ID
             </h1>
             <p className="font-mono text-xs text-slate-500 mt-2 uppercase tracking-widest">

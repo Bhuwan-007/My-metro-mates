@@ -139,13 +139,13 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
         <h3 className="text-xl font-bold text-green-400 flex items-center gap-2">
           📞 Contact Info
         </h3>
-        <p className="text-xs text-gray-800"><strong>Shared with: People you've requested and people whose requests you've accepted.</strong></p>
+        <p className="text-xs"><strong>Shared with: People you've requested and people whose requests you've accepted.</strong></p>
 
         <div className="flex gap-4 mb-2">
             <button
                 type="button"
                 onClick={() => setFormData({ ...formData, contactMethod: "instagram" })}
-                className={`cursor-pointer flex-1 py-2 rounded-lg text-sm font-bold border ${formData.contactMethod === "instagram" ? "bg-pink-600 border-pink-500 text-white" : "bg-black/40 border-gray-700 text-gray-600"}`}
+                className={`cursor-pointer flex-1 py-2 rounded-lg text-sm font-bold border ${formData.contactMethod === "instagram" ? "bg-pink-600 border-pink-500 text-white" : "bg-black/40 border-gray-700 "}`}
             >
                 Instagram
             </button>

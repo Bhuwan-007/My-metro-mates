@@ -18,7 +18,7 @@ export default async function MatesPage() {
       
       {/* Header */}
       <div className="mb-10 text-center">
-        <h1 className="font-hand text-5xl font-bold text-slate-900 inline-block relative">
+        <h1 className="font-hand text-5xl font-bold text-slate-900 inline-block relative underline-sketch px-4">
            My Scrapbook
            {/* Underline Scribble */}
            <svg className="absolute w-full h-3 -bottom-2 left-0 text-yellow-300" viewBox="0 0 100 10" preserveAspectRatio="none">
