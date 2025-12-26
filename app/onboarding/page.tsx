@@ -1,36 +1,36 @@
 import { createUser } from "@/actions/user.actions";
-import OnboardingForm from "@/components/OnboardingForm";
 import { redirect } from "next/navigation";
+import OnboardingForm from "@/components/OnboardingForm"; // You keep your existing logic component
 
 export default async function OnboardingPage() {
-  // 1. Get the current user
   const user = await createUser();
-
-  // 2. Safety: If not logged in, kick out
   if (!user) redirect("/");
 
-  // 3. If ALREADY onboarded, don't show this page again
-  //if (user.onboarded) redirect("/dashboard");
-
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-6 pb-24">
       
-      {/* Background decoration */}
-      <div className="fixed inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
+      {/* The Paper Sheet */}
+      <div className="paper-card w-full max-w-lg p-8 relative bg-white rotate-1">
+        
+        {/* Tape at top */}
+        <div className="tape"></div>
 
-      <div className="relative z-10 w-full max-w-lg">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-            Setup Profile
-          </h1>
-          <p className="text-gray-400">
-            Tell us your route so we can find your mates.
-          </p>
+        <div className="mb-8 text-center mt-4">
+            <h1 className="font-kalam text-4xl font-bold underline-sketch inline-block px-4">
+                Student ID
+            </h1>
+            <p className="font-mono text-xs text-slate-500 mt-2 uppercase tracking-widest">
+                Registration Form v1.0
+            </p>
         </div>
 
-        <OnboardingForm user={user} />
+        {/* NOTE: You need to pass 'user' to your form component.
+           Ensure your OnboardingForm.tsx uses the new CSS classes!
+           (See instructions below for OnboardingForm styles)
+        */}
+        <OnboardingForm user={JSON.parse(JSON.stringify(user))} />
+        
       </div>
-
     </div>
   );
 }

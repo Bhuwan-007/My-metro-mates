@@ -61,10 +61,10 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
         
         {/* Home Station */}
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1">Home Station</label>
+          <label className="block text-sm font-medium text-gray-600 mb-1 ">Home Station</label>
           <select
             required
-            className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
+            className="cursor-pointer w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
             value={formData.homeStation}
             onChange={(e) => setFormData({ ...formData, homeStation: e.target.value })}
           >
@@ -83,10 +83,10 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 
         {/* College Station */}
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1">College Station</label>
+          <label className="block text-sm font-medium text-gray-600 mb-1">College Station</label>
           <select
             required
-            className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
+            className="cursor-pointer w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
             value={formData.collegeStation}
             onChange={(e) => setFormData({ ...formData, collegeStation: e.target.value })}
           >
@@ -106,11 +106,11 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
         <div className="grid grid-cols-2 gap-4">
             {/* Start Time */}
             <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1">Start Time</label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Start Time</label>
             <input
                 type="time"
                 required
-                className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
+                className="cursor-pointer w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
                 value={formData.startTime}
                 onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
             />
@@ -118,10 +118,10 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 
             {/* 3. NEW UI: Gender Selection */}
             <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Gender</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Gender</label>
                 <select
                     required
-                    className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
+                    className="cursor-pointer w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none"
                     value={formData.gender}
                     onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                 >
@@ -139,20 +139,20 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
         <h3 className="text-xl font-bold text-green-400 flex items-center gap-2">
           📞 Contact Info
         </h3>
-        <p className="text-xs text-gray-300"><strong>Shared with: People you've requested and people whose requests you've accepted.</strong></p>
+        <p className="text-xs"><strong>Shared with: People you've requested and people whose requests you've accepted.</strong></p>
 
         <div className="flex gap-4 mb-2">
             <button
                 type="button"
                 onClick={() => setFormData({ ...formData, contactMethod: "instagram" })}
-                className={`flex-1 py-2 rounded-lg text-sm font-bold border ${formData.contactMethod === "instagram" ? "bg-pink-600 border-pink-500 text-white" : "bg-black/40 border-gray-700 text-gray-400"}`}
+                className={`cursor-pointer flex-1 py-2 rounded-lg text-sm font-bold border ${formData.contactMethod === "instagram" ? "bg-pink-600 border-pink-500 text-white" : "bg-black/40 border-gray-700 "}`}
             >
                 Instagram
             </button>
             <button
                 type="button"
                 onClick={() => setFormData({ ...formData, contactMethod: "whatsapp" })}
-                className={`flex-1 py-2 rounded-lg text-sm font-bold border ${formData.contactMethod === "whatsapp" ? "bg-green-600 border-green-500 text-white" : "bg-black/40 border-gray-700 text-gray-400"}`}
+                className={`cursor-pointer flex-1 py-2 rounded-lg text-sm font-bold border ${formData.contactMethod === "whatsapp" ? "bg-green-600 border-green-500 text-white" : "bg-black/40 border-gray-700 text-gray-600"}`}
             >
                 WhatsApp
             </button>
@@ -175,11 +175,11 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1">Short Bio</label>
+          <label className="block text-sm font-medium text-gray-600 mb-1">Short Bio</label>
           <textarea
             rows={2}
             placeholder="E.g. BTech CSE 2nd Year. I sleep in metro 😴"
-            className="w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none resize-none"
+            className="cursor-text w-full rounded-lg bg-black/50 border border-gray-700 p-3 text-white focus:border-blue-500 focus:outline-none resize-none"
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
           />
@@ -190,7 +190,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 py-4 font-bold text-white shadow-lg transition-transform hover:scale-[1.02] cursor-pointer active:scale-[0.98] disabled:opacity-50"
+        className="w-full rounded-xl bg-linear-to-r from-blue-600 to-blue-500 py-4 font-bold text-white shadow-lg transition-transform hover:scale-[1.02] cursor-pointer active:scale-[0.98] disabled:opacity-50"
       >
         {loading ? "Saving Profile..." : "Complete Profile →"}
       </button>

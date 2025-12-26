@@ -5,7 +5,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500/30 flex flex-col items-center justify-center p-6">
       
       {/* Background FX */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[40px_40px] pointer-events-none"></div>
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none"></div>
 
       <div className="relative z-10 w-full max-w-md">
@@ -19,7 +19,7 @@ export default function AboutPage() {
         <div className="bg-[#0A0A0A] border border-zinc-800 rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden group">
             
             {/* Glow Effect (FIXED: Added pointer-events-none) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
             {/* Avatar */}
             <div className="relative mx-auto w-24 h-24 mb-6 z-10">

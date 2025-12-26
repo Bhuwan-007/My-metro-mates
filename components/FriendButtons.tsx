@@ -37,7 +37,7 @@ export default function FriendButtons({ friendId, contactMethod, contactValue }:
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-transform active:scale-95 ${
                 contactMethod === 'whatsapp' 
                 ? 'bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20' 
-                : 'bg-pink-500/10 text-pink-400 border border-pink-500/20 hover:bg-pink-500/20'
+                : 'bg-pink-500/10 text-pink-400 border border-pink-600/20 hover:bg-pink-500/20'
             }`}
         >
             {contactMethod === 'whatsapp' ? 'WhatsApp' : 'Instagram'} ↗
