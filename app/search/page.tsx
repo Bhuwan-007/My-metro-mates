@@ -39,8 +39,8 @@ export default async function SearchPage({
             {/* Highlighter: Blue -> Dark Blue */}
             <div className="absolute bottom-2 left-0 w-full h-4 bg-[#b3e5fc] dark:bg-blue-900/50 z-0 transform -rotate-2"></div>
         </div>
-        <p className="font-hand text-xl text-black dark:text-slate-300 mt-1 transition-colors">
-            Going to <span className="font-bold font-kalam underline decoration-wavy decoration-orange-400 dark:decoration-orange-600 dark:text-white">{user.collegeStation}</span>
+        <p className="font-hand text-xl mt-1 transition-colors">
+            Going to <span className="font-bold font-kalam underline decoration-wavy decoration-green-500 dark:decoration-green-800 ">{user.collegeStation}</span>
         </p>
       </div>
 
