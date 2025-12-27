@@ -130,7 +130,7 @@ export default async function SearchPage({
 
                 {/* BIO: Yellow Note -> Dark Translucent Note */}
                 {match.bio && (
-                    <div className="mb-4 bg-yellow-50 dark:bg-yellow-900/10 p-3 border-l-2 border-slate-300 dark:border-slate-600 font-hand text-lg text-slate-700 leading-tight">
+                    <div className="mb-4 bg-yellow-50 dark:bg-yellow-900/10 p-3 border-l-2 border-slate-300 dark:border-slate-600 font-hand text-lg text-slate-700 dark:text-slate-200 leading-tight">
                         "{match.bio}"
                     </div>
                 )}
