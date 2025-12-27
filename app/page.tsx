@@ -13,22 +13,22 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-(--bg-paper)">
       
       {/* Background doodles */}
-      <div className="absolute top-10 -left-5 text-9xl opacity-10 rotate-12">🚇</div>
-      <div className="absolute bottom-20 -right-5 text-9xl opacity-10 rotate-[-12]">🎒</div>
+      <div className="absolute top-10 -left-5 text-9xl opacity-17 rotate-12">🚇</div>
+      <div className="absolute bottom-20 -right-5 text-9xl opacity-17 rotate-[-12]">🎒</div>
 
       <div className="relative z-10 w-full max-w-md text-center">
         
         {/* Sticker Logo */}
         <div className="w-24 h-24 bg-white border-4 border-slate-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_#000] rotate-[-5deg]">
-           <span className="text-5xl">🚇</span>
+           <img  src="/icon-192.png" alt="App Logo" className="w-16 h-16 object-contain rounded-full"/>
         </div>
 
-        <h1 className="font-hand text-6xl font-black text-slate-900 leading-[0.9] mb-4">
+        <h1 className="font-kalam text-6xl font-black  leading-[0.9] mb-4">
           Metro <br/>
-          <span className="highlight-yellow px-2">Mates</span>
+          <span className="highlight-blue px-2">Mates</span>
         </h1>
         
         <p className="font-mono text-slate-600 text-sm mb-10 bg-white inline-block px-2 py-1 border border-slate-300 rotate-1">
