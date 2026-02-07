@@ -52,9 +52,26 @@ export default async function MatesPage() {
                             <div className="flex items-center gap-3 mb-3">
                                 <img src={req.imageUrl} className="w-10 h-10 rounded-full border border-black grayscale contrast-125" />
                                 <div>
-                                    <h3 className="font-hand text-xl font-bold leading-none">{req.firstName} {req.lastName}</h3>
-                                    <p className="font-mono text-[10px] ">Wants to connect</p>
+                                    <h3 className="font-hand text-xl leading-none font-black text-slate-800">{req.firstName} {req.lastName}</h3>
+                                    <p className="font-mono text-[10px] text-slate-800 ">Wants to connect</p>
                                 </div>
+                            </div>
+                            {/* RIGHT: Verification Info */}
+                            <div className="text-right">
+                                <p className="font-mono text-[9px] text-slate-500 uppercase tracking-widest mb-0.5">
+                                    For verification
+                                </p>
+                                {/* Contact Method Display */}
+                                {req.contactValue ? (
+                                    <div className="inline-block bg-white/50 border border-slate-400/30 px-2 py-0.5 rounded text-xs font-bold text-slate-800 transform rotate-1">
+                                        <span className="text-[9px] text-slate-500 mr-1 uppercase">
+                                            {req.contactMethod}:
+                                        </span>
+                                        {req.contactValue}
+                                    </div>
+                                ) : (
+                                    <span className="text-[10px] text-slate-400 italic">Not provided</span>
+                                )}
                             </div>
                             
                             <div className="flex gap-2 mt-2">

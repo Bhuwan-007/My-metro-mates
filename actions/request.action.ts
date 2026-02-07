@@ -72,7 +72,10 @@ export async function acceptFriendRequest(senderClerkId: string) {
     // Update SENDER
     await UserModel.findOneAndUpdate(
       { clerkId: senderClerkId },
-      { $addToSet: { friends: user.id } }
+      { 
+        $addToSet: { friends: user.id },
+        $pull: { friendRequests: user.id }
+      }
     );
 
     // CLEANUP: Delete ALL requests between these two users (A->B and B->A)
