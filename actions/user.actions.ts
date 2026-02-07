@@ -238,12 +238,12 @@ export async function getMyMates(currentUserId: string) {
     // Pending Requests
     const requests = await UserModel.find({
       clerkId: { $in: currentUser.friendRequests }
-    }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue");
+    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue");
 
     // Friends (Always full access)
     const friends = await UserModel.find({
       clerkId: { $in: currentUser.friends }
-    }).select("clerkId firstName lastName imageUrl homeStation startTime contactMethod contactValue bio todaysTime lastStatusUpdate");
+    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue bio todaysTime lastStatusUpdate");
 
     return {
       requests: JSON.parse(JSON.stringify(requests)),

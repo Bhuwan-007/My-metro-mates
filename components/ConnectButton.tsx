@@ -77,7 +77,7 @@ export default function ConnectButton({ receiverId, isPending }: { receiverId: s
   return (
     <button 
       onClick={handleConnect}
-      className="bg-amber-200 hover:bg-blue-300 cursor-pointer text-blue-700 px-6 py-2 rounded-lg text-xs font-extrabold tracking-wide transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed min-w-[100px]"
+      className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] px-6 py-2 rounded-lg text-xs font-extrabold tracking-wide transition-all active:scale-95 disabled:bg-gray-400 disabled:border-gray-400 min-w-[100px]"
     >
       CONNECT
     </button>

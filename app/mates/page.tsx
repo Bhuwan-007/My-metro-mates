@@ -46,38 +46,69 @@ export default async function MatesPage() {
                 <div className="space-y-4">
                     {/* FIXED: Added ': number' to index */}
                     {requests.map((req: any, index: number) => (
-                        <div key={req.clerkId} className={`bg-[#fff9c4] p-5 shadow-md relative ${index % 2 === 0 ? 'rotate-1' : '-rotate-2'}`}>
-                            <div className="absolute -top-3 left-1/2 w-3 h-3 rounded-full bg-red-500 border border-black"></div>
+                    <div 
+                        key={req.clerkId} 
+                        className={`bg-[#ffe0c4] p-4 shadow-[4px_4px_0px_rgba(0,0,0,0.1)] relative border border-black ${index % 2 === 0} `}
+                    >
+                        {/* Red Pin (Decorative) */}
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-red-500 border border-black shadow-sm"></div>
+                        
+                        <div className="flex justify-between items-start gap-2">
+                        
+                        {/* LEFT: Photo + Info + Route */}
+                        <div className="flex gap-3 w-full">
+                            {/* Profile Pic */}
+                            <img 
+                            src={req.imageUrl} 
+                            className="w-12 h-12 rounded-full border border-black grayscale contrast-125 bg-white shrink-0 object-cover" 
+                            alt="User"
+                            />
                             
-                            <div className="flex items-center gap-3 mb-3">
-                                <img src={req.imageUrl} className="w-10 h-10 rounded-full border border-black grayscale contrast-125" />
-                                <div>
-                                    <h3 className="font-hand text-xl leading-none font-black text-slate-800">{req.firstName} {req.lastName}</h3>
-                                    <p className="font-mono text-[10px] text-slate-800 ">Wants to connect</p>
-                                </div>
+                            <div className="flex-1 min-w-0"> {/* min-w-0 prevents text overflow issues */}
+                            {/* Name */}
+                            <h3 className="font-hand text-xl font-black text-slate-900 truncate pr-2">
+                                {req.firstName} {req.lastName}
+                            </h3>
+
+                            {/* Route Info (New Compact Design) */}
+                            <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-slate-700 font-bold bg-white/40 w-fit px-1.5 py-0.5 rounded border border-yellow-500/20">
+                                <span>{req.homeStation || "Unknown"}</span>
+                                <span className="text-slate-400">➜</span>
+                                <span>{req.collegeStation || "Unknown"}</span>
                             </div>
-                            {/* RIGHT: Verification Info */}
-                            <div className="text-right">
-                                <p className="font-mono text-[9px] text-slate-500 uppercase tracking-widest mb-0.5">
-                                    For verification
-                                </p>
-                                {/* Contact Method Display */}
-                                {req.contactValue ? (
-                                    <div className="inline-block bg-white/50 border border-slate-400/30 px-2 py-0.5 rounded text-xs font-bold text-slate-800 transform rotate-1">
-                                        <span className="text-[9px] text-slate-500 mr-1 uppercase">
-                                            {req.contactMethod}:
-                                        </span>
-                                        {req.contactValue}
-                                    </div>
-                                ) : (
-                                    <span className="text-[10px] text-slate-400 italic">Not provided</span>
-                                )}
-                            </div>
-                            
-                            <div className="flex gap-2 mt-2">
-                                <RequestButtons senderId={req.clerkId} />
+
+                            <p className="font-mono text-[12px] text-slate-500 mt-0.5 ml-0.5">Wants to connect</p>
                             </div>
                         </div>
+
+                        {/* RIGHT: Verification Badge (Compact Stamp Style) */}
+                        <div className="flex flex-col items-end shrink-0">
+                            <span className="text-[14px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
+                            Verify
+                            </span>
+                            
+                            <a 
+                                href={req.contactMethod === 'whatsapp' ? `https://wa.me/${req.contactValue}` : `https://instagram.com/${req.contactValue}`}
+                                target="_blank"
+                                className={`
+                                block text-[10px] font-bold uppercase px-2 py-1 rounded border-2 shadow-sm hover:scale-105 transition-all
+                                ${req.contactMethod === 'whatsapp' 
+                                    ? 'bg-green-100 text-cyan-700 border-cyan-600' 
+                                    : 'bg-pink-100 text-purple-700 border-purple-600'
+                                }
+                                `}
+                            >
+                                {req.contactMethod === 'whatsapp' ? 'WA' : 'IG'} ↗
+                            </a>
+                        </div>
+
+                        </div>
+                        
+                        {/* BOTTOM: Action Buttons */}
+                        <div className="flex justify-end mt-2 pt-2 border-t border-yellow-600/10">
+                            <RequestButtons senderId={req.clerkId} />
+                        </div>
+                    </div>
                     ))}
                 </div>
             )}
