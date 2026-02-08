@@ -32,7 +32,7 @@ export default function FriendButtons({ friendId, contactMethod, contactValue }:
     <div className="flex flex-col items-end gap-2">
         {/* Contact Button */}
         <a 
-            href={contactMethod === 'whatsapp' ? `https://wa.me/${contactValue}` : `https://instagram.com/${contactValue}`}
+            href={contactMethod === 'whatsapp' ? `https://wa.me/${contactValue}` : `https://instagram.com/_u/${contactValue}`}
             target="_blank"
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-transform active:scale-95 ${
                 contactMethod === 'whatsapp' 

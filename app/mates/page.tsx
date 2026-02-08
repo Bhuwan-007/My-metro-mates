@@ -88,7 +88,7 @@ export default async function MatesPage() {
                             </span>
                             
                             <a 
-                                href={req.contactMethod === 'whatsapp' ? `https://wa.me/${req.contactValue}` : `https://instagram.com/${req.contactValue}`}
+                                href={req.contactMethod === 'whatsapp' ? `https://wa.me/${req.contactValue}` : `https://instagram.com/_u/${req.contactValue}`}
                                 target="_blank"
                                 className={`
                                 block text-[10px] font-bold uppercase px-2 py-1 rounded border-2 shadow-sm hover:scale-105 transition-all
