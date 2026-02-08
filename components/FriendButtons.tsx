@@ -4,6 +4,7 @@ import { removeFriend } from "@/actions/request.action";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ContactLink from "@/components/ContactLink";
+import InfoTooltip from "@/components/InfoTooltip";
 
 
 export default function FriendButtons({ friendId, contactMethod, contactValue }: { friendId: string, contactMethod: string, contactValue: string }) {
@@ -32,19 +33,21 @@ export default function FriendButtons({ friendId, contactMethod, contactValue }:
 
   return (
     <div className="flex flex-col items-end gap-2">
+      <div className="flex items-center gap-1">
         {/* Contact Button */}
-        <ContactLink
-          method={contactMethod}
-          value={contactValue}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-transform active:scale-95 ${
-            contactMethod === 'whatsapp' 
-              ? 'bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20' 
-              : 'bg-pink-500/10 text-pink-400 border border-pink-600/20 hover:bg-pink-500/20'
-          }`}
-        >
-          {contactMethod === 'whatsapp' ? 'WhatsApp' : 'Instagram'} ↗
-      </ContactLink>
-
+          <ContactLink
+            method={contactMethod}
+            value={contactValue}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-transform active:scale-95 ${
+              contactMethod === 'whatsapp' 
+                ? 'bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20' 
+                : 'bg-pink-500/10 text-pink-400 border border-pink-600/20 hover:bg-pink-500/20'
+            }`}
+          >
+            {contactMethod === 'whatsapp' ? 'WhatsApp' : 'Instagram'} ↗
+            {contactMethod === 'instagram' && <InfoTooltip />}
+        </ContactLink>
+      </div>
         {/* Smart Unfriend Button */}
         <button 
             onClick={handleRemoveClick}

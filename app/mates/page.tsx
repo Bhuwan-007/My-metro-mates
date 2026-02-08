@@ -7,6 +7,7 @@ import RequestButtons from "@/components/RequestButtons";
 import FriendButtons from "@/components/FriendButtons";
 import RefreshButton from "@/components/RefreshButton";
 import ContactLink from "@/components/ContactLink";
+import InfoTooltip from "@/components/InfoTooltip";
 
 
 export default async function MatesPage() {
@@ -88,21 +89,22 @@ export default async function MatesPage() {
                             <span className="text-[14px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
                             Verify
                             </span>
-                            
-                            <ContactLink
-                                method={req.contactMethod}
-                                value={req.contactValue}
-                                className={`
-                                    block text-[10px] font-bold uppercase px-2 py-1 rounded border-2 shadow-sm hover:scale-105 transition-all
-                                    ${req.contactMethod === 'whatsapp' 
-                                    ? 'bg-green-100 text-cyan-700 border-cyan-600' 
-                                    : 'bg-pink-100 text-purple-700 border-purple-600'
-                                    }
-                                `}
-                                >
-                                {req.contactMethod === 'whatsapp' ? 'WA' : 'IG'} ↗
-                            </ContactLink>
-
+                            <div className="flex items-center gap-1">
+                                <ContactLink
+                                    method={req.contactMethod}
+                                    value={req.contactValue}
+                                    className={`
+                                        block text-[10px] font-bold uppercase px-2 py-1 rounded border-2 shadow-sm hover:scale-105 transition-all
+                                        ${req.contactMethod === 'whatsapp' 
+                                        ? 'bg-green-100 text-cyan-700 border-cyan-600' 
+                                        : 'bg-pink-100 text-purple-700 border-purple-600'
+                                        }
+                                    `}
+                                    >
+                                    {req.contactMethod === 'whatsapp' ? 'WA' : 'IG'} ↗
+                                </ContactLink>
+                                {req.contactMethod === 'instagram' && <InfoTooltip />}
+                            </div>
                         </div>
 
                         </div>

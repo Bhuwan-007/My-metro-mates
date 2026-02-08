@@ -13,27 +13,21 @@ export default function ContactLink({
   className?: string;
   children: React.ReactNode;
 }) {
-  const [isAndroid, setIsAndroid] = useState(false);
-
-  useEffect(() => {
-    setIsAndroid(/android/i.test(navigator.userAgent));
-  }, []);
 
   let finalLink = "#";
 
   if (method === "whatsapp") {
-    finalLink = `https://wa.me/${value.replace(/\D/g, "")}`;
-  } else {
+  finalLink = `https://wa.me/${value.replace(/\D/g, "")}`;
+    } else {
     const clean = value
-      .replace("@", "")
-      .replace(/https?:\/\/(www\.)?instagram\.com\//, "")
-      .replace(/\/$/, "")
-      .trim();
+        .replace("@", "")
+        .replace(/https?:\/\/(www\.)?instagram\.com\//, "")
+        .replace(/\/$/, "")
+        .trim();
 
-    finalLink = isAndroid
-      ? `intent://instagram.com/_u/${clean}/#Intent;package=com.instagram.android;scheme=https;end`
-      : `https://www.instagram.com/${clean}/`;
-  }
+    finalLink = `https://www.instagram.com/${clean}/`;
+    }
+
 
   return (
     <a
