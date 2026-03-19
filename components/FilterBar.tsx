@@ -50,7 +50,7 @@ export default function FilterBar() {
         </div>
 
         {/* 2. SLIM FILTERS ROW */}
-        <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-800 border-2 border-slate-900 dark:border-slate-400 px-3 py-1.5 shadow-sm rotate-1 rounded-sm">
+        <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-800 border-2 border-slate-900 dark:border-slate-400 px-3 py-1.5 shadow-sm rounded-sm">
             
             {/* Scrollable Filters Area */}
             <div className="flex items-center gap-3 overflow-x-auto no-scrollbar flex-1">

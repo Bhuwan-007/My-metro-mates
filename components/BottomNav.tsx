@@ -10,7 +10,7 @@ export default function BottomNav({ userEmail }: { userEmail: string }) {
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-sm">
       {/* USE THE NEW CLASS HERE: nav-card */}
-      <div className="nav-card flex justify-between items-center px-4 py-2 rotate-1 rounded-full">
+      <div className="nav-card flex justify-between items-center px-4 py-2  rounded-full">
         
         <NavItem href="/dashboard" active={isActive('/dashboard')} label="Home" emoji="🏠" />
         <NavItem href="/search" active={isActive('/search')} label="Find" emoji="🔍" />

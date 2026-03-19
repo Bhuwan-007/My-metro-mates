@@ -11,7 +11,7 @@ export default async function OnboardingPage() {
     <div className="min-h-screen flex items-center justify-center p-6 pb-24">
       
       {/* The Paper Sheet */}
-      <div className="paper-card w-full max-w-lg p-8 relative bg-white rotate-1">
+      <div className="paper-card w-full max-w-lg p-8 relative bg-white ">
         
         {/* Tape at top */}
         <div className="tape"></div>

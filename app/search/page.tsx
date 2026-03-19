@@ -37,7 +37,7 @@ export default async function SearchPage({
                 Find Travelers
             </h1>
             {/* Highlighter: Blue -> Dark Blue */}
-            <div className="absolute bottom-2 left-0 w-full h-4 bg-[#b3e5fc] dark:bg-blue-900/50 z-0 transform -rotate-2"></div>
+            <div className="absolute bottom-2 left-0 w-full h-4 bg-[#b3e5fc] dark:bg-blue-900/50 z-0 transform "></div>
         </div>
         <p className="font-hand text-xl mt-1 transition-colors">
             Going to <span className="font-bold font-kalam underline decoration-wavy decoration-green-500 dark:decoration-green-800 ">{user.collegeStation}</span>
@@ -45,13 +45,13 @@ export default async function SearchPage({
       </div>
 
       {/* --- FILTER BAR --- */}
-      <div className="mb-8 rotate-1">
+      <div className="mb-8 ">
          <FilterBar />
       </div>
       
       {/* --- UNVERIFIED WARNING --- */}
       {!isVerified && (
-          <div className="mb-8 mx-auto max-w-sm bg-red-50 dark:bg-red-900/20 border-2 border-red-800 dark:border-red-500 border-dashed p-4 -rotate-1 shadow-sm relative transition-colors">
+          <div className="mb-8 mx-auto max-w-sm bg-red-50 dark:bg-red-900/20 border-2 border-red-800 dark:border-red-500 border-dashed p-4  shadow-sm relative transition-colors">
              <div className="absolute -top-3 -left-3 w-8 h-8 bg-red-500 rounded-full border-2 border-black flex items-center justify-center text-white font-bold">!</div>
              <p className="font-hand text-xl font-bold text-red-800 dark:text-red-400">Guest Mode</p>
              <p className="text-sm font-sans mb-3 text-red-900 dark:text-red-200">Times are hidden until you verify your ID.</p>
@@ -72,7 +72,7 @@ export default async function SearchPage({
         )}
 
         {matches.map((match: any, index: number) => {
-            const rotation = index % 2 === 0 ? 'rotate-1' : 'rotate-[-1deg]';
+            
             
             let displayTime = match.startTime;
             let isLive = false;
@@ -88,7 +88,7 @@ export default async function SearchPage({
 
             return (
             // 🎨 CARD BG: bg-white -> dark:bg-slate-800
-            <div key={match.clerkId} className={`paper-card p-5 relative ${rotation} bg-white dark:bg-slate-800 transition-all duration-300 hover:z-10`}>
+            <div key={match.clerkId} className={`paper-card p-5 relative bg-white dark:bg-slate-800 transition-all duration-300 hover:z-10`}>
                 
                 {/* Tape: Adjusted transparency for dark mode */}
                 <div className="tape dark:bg-white/10 dark:border-white/20"></div>
@@ -97,14 +97,36 @@ export default async function SearchPage({
                     <div className="flex items-center gap-3">
                         <img src={match.imageUrl} className="w-14 h-14 rounded-full border-2 border-slate-900 dark:border-slate-500 object-cover bg-slate-100" />
                         <div>
-                            {/* NAME: Dark -> White */}
-                            <h3 className="font-hand text-2xl font-bold  leading-none">
-                                {match.firstName}
-                            </h3>
-                            {/* TAG: Slate-50 -> Slate-700 */}
-                            <span className="text-[14px] font-mono border border-(--text-muted) px-1 rounded opacity-70">
-                                FROM: {match.homeStation}
-                            </span>
+                           <div className="flex flex-col justify-center">
+    
+    {/* 1. NAME (Top row) */}
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <h3 className="font-hand text-2xl font-bold leading-none">
+                                        {match.firstName}
+                                    </h3>
+                                </div>
+                                
+                                {/* 2. BADGE & STATION (Stacked beneath the name) */}
+                                <div className="flex flex-col items-start gap-1.5">
+                                    
+                                    {/* VERIFICATION BADGE */}
+                                    {match.isVerified ? (
+                                        <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-500 text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full inline-flex w-fit shadow-sm">
+                                            ✓ Verified
+                                        </span>
+                                    ) : (
+                                        <span className="bg-red-100 dark:bg-red-700 text-red-500 dark:text-red-300 border border-red-300 dark:border-red-500 text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full inline-flex w-fit shadow-sm">
+                                            Unverified
+                                        </span>
+                                    )}
+
+                                    {/* HOME STATION TAG */}
+                                    <span className="text-[12px] font-mono border border-slate-300 dark:border-slate-600 px-1.5 py-0.5 rounded opacity-80 inline-flex w-fit bg-slate-50/50 dark:bg-slate-800/50">
+                                        FROM: {match.homeStation}
+                                    </span>
+                                    
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -113,14 +135,14 @@ export default async function SearchPage({
                         {isVerified && displayTime ? (
                             <>
                                 {/* Time Box: Slate-100 -> Slate-700 */}
-                                <div className={`border-2 border-slate-900 dark:border-slate-400 px-2 py-1 rounded-lg transform -rotate-3 ${isLive ? "bg-green-100 dark:bg-green-900/40" : "bg-slate-100 dark:bg-slate-700"}`}>
+                                <div className={`border-2 border-slate-900 dark:border-slate-400 px-2 py-1 rounded-lg transform  ${isLive ? "bg-green-100 dark:bg-green-900/40" : "bg-slate-100 dark:bg-slate-700"}`}>
                                     <span className="font-mono text-sm font-bold text-slate-900 dark:text-white">{displayTime}</span>
                                 </div>
                                 {isLive && <p className="font-hand text-xs text-green-600 dark:text-green-400 font-bold mt-1">Live!</p>}
                             </>
                         ) : (
                             // Locked State
-                            <div className="border-2 border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded-lg transform -rotate-3 opacity-80 flex items-center gap-1 cursor-not-allowed" title="Verify ID to see time">
+                            <div className="border-2 border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded-lg transform  opacity-80 flex items-center gap-1 cursor-not-allowed" title="Verify ID to see time">
                                 <span className="font-mono text-sm font-bold text-slate-400 dark:text-slate-500">Locked</span>
                                 <span className="text-xs">🔒</span>
                             </div>
@@ -141,20 +163,11 @@ export default async function SearchPage({
                         CONNECTIONS: {match.friendsCount || 0}
                     </span>
 
-                    {isVerified ? (
-                        (() => {
-                            if (match.isFriend) return <span className="font-hand font-bold text-green-600 dark:text-green-400 text-lg">Friends! ✓</span>;
-                            if (match.hasIncomingRequest) return <Link href="/mates"><button className="btn-sketch px-4 py-1 text-sm font-bold">Accept Request</button></Link>;
-                            return <ConnectButton receiverId={match.clerkId} isPending={match.hasPendingRequest} />;
-                        })()
-                    ) : (
-                        <Link href="/verify-id">
-                            <button className="flex items-center gap-1 font-hand font-bold text-slate-400 dark:text-slate-500 text-sm hover:text-blue-500 transition-colors">
-                                <span>Add Friend</span>
-                                <span className="text-xs">🔒</span>
-                            </button>
-                        </Link>
-                    )}
+                    {(() => {
+                        if (match.isFriend) return <span className="font-hand font-bold text-green-600 dark:text-green-400 text-lg">Friends! ✓</span>;
+                        if (match.hasIncomingRequest) return <Link href="/mates"><button className="btn-sketch px-4 py-1 text-sm font-bold">Accept Request</button></Link>;
+                        return <ConnectButton receiverId={match.clerkId} isPending={match.hasPendingRequest} />;
+                    })()}
                 </div>
 
             </div>

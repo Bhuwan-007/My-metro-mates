@@ -85,27 +85,37 @@ export default async function MatesPage() {
                         </div>
 
                         {/* RIGHT: Verification Badge (Compact Stamp Style) */}
-                        <div className="flex flex-col items-end shrink-0">
-                            <span className="text-[14px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
-                            Verify
-                            </span>
-                            <div className="flex items-center gap-1">
-                                <ContactLink
-                                    method={req.contactMethod}
-                                    value={req.contactValue}
-                                    className={`
-                                        block text-[10px] font-bold uppercase px-2 py-1 rounded border-2 shadow-sm hover:scale-105 transition-all
-                                        ${req.contactMethod === 'whatsapp' 
-                                        ? 'bg-green-100 text-cyan-700 border-cyan-600' 
-                                        : 'bg-pink-100 text-purple-700 border-purple-600'
-                                        }
-                                    `}
+                        <div className="flex flex-col items-end shrink-0 gap-1.5">
+    
+                                {/* 🛡️ VERIFICATION BADGE (Moved here) */}
+                                {req.isVerified ? (
+                                    <span className="bg-green-100/80 text-green-800 border border-green-600 text-[8px] uppercase tracking-wider font-black px-2.5 py-1 rounded-full shadow-sm">
+                                        ✓ Verified
+                                    </span>
+                                ) : (
+                                    <span className="bg-red-200/80 text-red-600 border border-red-400 text-[8px] uppercase tracking-wider font-black px-2.5 py-1 rounded-full shadow-sm">
+                                        Unverified
+                                    </span>
+                                )}
+                                
+                                {/* Contact Links */}
+                                <div className="flex items-center gap-1">
+                                    <ContactLink
+                                        method={req.contactMethod}
+                                        value={req.contactValue}
+                                        className={`
+                                            block text-[10px] font-bold uppercase px-2 py-1 rounded border-2 shadow-sm hover:scale-105 transition-all
+                                            ${req.contactMethod === 'whatsapp' 
+                                            ? 'bg-green-100 text-cyan-700 border-cyan-600' 
+                                            : 'bg-pink-100 text-purple-700 border-purple-600'
+                                            }
+                                        `}
                                     >
-                                    {req.contactMethod === 'whatsapp' ? 'WA' : 'IG'} ↗
-                                </ContactLink>
-                                {req.contactMethod === 'instagram' && <InfoTooltip />}
+                                        {req.contactMethod === 'whatsapp' ? 'WA' : 'IG'} ↗
+                                    </ContactLink>
+                                    {req.contactMethod === 'instagram' && <InfoTooltip />}
+                                </div>
                             </div>
-                        </div>
 
                         </div>
                         

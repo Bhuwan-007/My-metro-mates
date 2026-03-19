@@ -130,7 +130,7 @@ export async function getMatches(
     let query: any = {
       clerkId: { $ne: currentUserId },
       onboarded: true,
-      isVerified: true, // Only show Verified users in results? (Optional: remove if you want to see unverified ppl too)
+      //isVerified: true, // Only show Verified users in results? (Optional: remove if you want to see unverified ppl too)
     };
 
     if (filterGender && filterGender !== "all") {
@@ -146,7 +146,7 @@ export async function getMatches(
     }
 
     // 4. FETCH DATA
-    const matches = await UserModel.find(query).select("_id clerkId firstName lastName homeStation collegeStation startTime imageUrl bio contactMethod friends todaysTime lastStatusUpdate gender");
+    const matches = await UserModel.find(query).select("_id clerkId firstName lastName homeStation collegeStation startTime imageUrl bio contactMethod friends todaysTime lastStatusUpdate gender isVerified");
 
     // 5. JS FILTERING (Time & Route Overlap)
     const myHome = getStationData(currentUser.homeStation);
@@ -210,6 +210,7 @@ export async function getMatches(
       return {
         ...matchObj,
         // If not verified, overwrite these fields with NULL
+        isVerified: matchObj.isVerified,
         startTime: canSeeData ? matchObj.startTime : null,
         todaysTime: canSeeData ? matchObj.todaysTime : null,
         lastStatusUpdate: canSeeData ? matchObj.lastStatusUpdate : null,
@@ -238,12 +239,12 @@ export async function getMyMates(currentUserId: string) {
     // Pending Requests
     const requests = await UserModel.find({
       clerkId: { $in: currentUser.friendRequests }
-    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue");
+    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue isVerified");
 
     // Friends (Always full access)
     const friends = await UserModel.find({
       clerkId: { $in: currentUser.friends }
-    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue bio todaysTime lastStatusUpdate");
+    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue bio todaysTime lastStatusUpdate isVerified");
 
     return {
       requests: JSON.parse(JSON.stringify(requests)),
