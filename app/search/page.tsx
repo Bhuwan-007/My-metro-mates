@@ -54,7 +54,7 @@ export default async function SearchPage({
           <div className="mb-8 mx-auto max-w-sm bg-red-50 dark:bg-red-900/20 border-2 border-red-800 dark:border-red-500 border-dashed p-4  shadow-sm relative transition-colors">
              <div className="absolute -top-3 -left-3 w-8 h-8 bg-red-500 rounded-full border-2 border-black flex items-center justify-center text-white font-bold">!</div>
              <p className="font-hand text-xl font-bold text-red-800 dark:text-red-400">Guest Mode</p>
-             <p className="text-sm font-sans mb-3 text-red-900 dark:text-red-200">Times are hidden until you verify your ID.</p>
+             <p className="text-sm font-sans mb-3 text-red-900 dark:text-red-200">Travel time is hidden until you verify your ID.</p>
              <Link href="/verify-id">
                  <button className="text-xs font-bold underline text-red-700 dark:text-red-300 hover:text-red-900 cursor-pointer">Verify Now</button>
              </Link>
