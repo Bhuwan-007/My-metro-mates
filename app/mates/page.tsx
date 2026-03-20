@@ -119,8 +119,10 @@ export default async function MatesPage() {
 
                         </div>
                         
-                        {/* BOTTOM: Action Buttons */}
-                        <div className="flex justify-end mt-2 pt-2 border-t border-yellow-600/10">
+                        <div className="flex justify-between items-center mt-2 pt-2 border-t border-yellow-600/10">
+                            <span className="font-mono text-[12px] text-slate-500 font-bold">
+                                CONNECTIONS: {req.friends ? req.friends.length : 0}
+                            </span>
                             <RequestButtons senderId={req.clerkId} />
                         </div>
                     </div>

@@ -214,6 +214,7 @@ export async function getMatches(
         startTime: canSeeData ? matchObj.startTime : null,
         todaysTime: canSeeData ? matchObj.todaysTime : null,
         lastStatusUpdate: canSeeData ? matchObj.lastStatusUpdate : null,
+        friendsCount: matchObj.friends ? matchObj.friends.length : 0,
         
         // Add flags
         hasPendingRequest: sentRequestIds.includes(match.clerkId),
@@ -239,7 +240,7 @@ export async function getMyMates(currentUserId: string) {
     // Pending Requests
     const requests = await UserModel.find({
       clerkId: { $in: currentUser.friendRequests }
-    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue isVerified");
+    }).select("clerkId firstName lastName imageUrl homeStation collegeStation startTime contactMethod contactValue isVerified friends");
 
     // Friends (Always full access)
     const friends = await UserModel.find({
